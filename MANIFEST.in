@@ -1,0 +1,9 @@
+include AUTHORS
+include LICENSE
+include DESCRIPTION
+include CHANGELOG.txt
+include README.md
+graft document_library 
+global-exclude *.orig *.pyc *.log
+prune document_library/tests/coverage/
+prune document_library/.ropeproject/
