@@ -8,6 +8,8 @@ class DocumentFactory(factory.Factory):
     """Factory for the ``Document`` model."""
     FACTORY_FOR = Document
 
+    is_published = True
+
 
 class DocumentTitleFactoryBase(factory.Factory):
     """Base factory for factories for ``DocumentTitle`` models."""
