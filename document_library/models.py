@@ -18,6 +18,8 @@ class Document(models.Model):
     :user: Optional FK to the User who created this document.
     :position: If you want to order the documents other than by creation date,
       enter numbers for positioning here.
+    :is_published: If ``False`` the object will be excluded from the library
+      views.
 
     """
     creation_date = models.DateTimeField(
