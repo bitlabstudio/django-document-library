@@ -15,6 +15,7 @@ simple-translation==0.8.6
 # Packages needed for running the tests. Needed by contributors.
 # ==============================================================
 Fabric
+factory-boy
 mock
 django-nose
 coverage
