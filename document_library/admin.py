@@ -6,7 +6,17 @@ from django.utils.translation import ugettext_lazy as _
 from simple_translation.admin import TranslationAdmin
 from simple_translation.utils import get_translation_queryset
 
-from document_library.models import Document
+from document_library.models import Document, DocumentCategory
+
+
+class DocumentCategoryAdmin(TranslationAdmin):
+    """Admin class for the ``DocumentCategory`` model."""
+    list_display = ['title', 'languages', ]
+
+    def title(self, obj):
+        lang = get_language()
+        return get_translation_queryset(obj).filter(language=lang)[0].title
+    title.short_description = _('Title')
 
 
 class DocumentAdmin(TranslationAdmin):
@@ -20,3 +30,4 @@ class DocumentAdmin(TranslationAdmin):
 
 
 admin.site.register(Document, DocumentAdmin)
+admin.site.register(DocumentCategory, DocumentCategoryAdmin)

@@ -3,6 +3,7 @@
 - Added is_on_front_page field to Document model.
 - Added templatetag get_frontpage_documents
 - Added tests for templatetags
+- Added DocumentCategory and DocumentCategoryTitle models
 
 === 0.1 ===
 

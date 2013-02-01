@@ -1,7 +1,36 @@
 """Factories for the ``document_library`` app."""
 import factory
 
-from document_library.models import Document, DocumentTitle
+from document_library.models import (
+    Document,
+    DocumentCategory,
+    DocumentCategoryTitle,
+    DocumentTitle,
+)
+
+
+class DocumentCategoryFactory(factory.Factory):
+    """Factory for the ``DocumentCategory`` model."""
+    FACTORY_FOR = DocumentCategory
+
+
+class DocumentCategoryTitleFactoryBase(factory.Factory):
+    """Base factory for factories for ``DocumentCategoryTitle`` models."""
+    FACTORY_FOR = DocumentCategoryTitle
+
+    category = factory.SubFactory(DocumentCategoryFactory)
+
+
+class DocumentCategoryTitleENFactory(DocumentCategoryTitleFactoryBase):
+    """Factory for english ``DocumentCategoryTitle`` objects."""
+    title = 'A title'
+    language = 'en'
+
+
+class DocumentCategoryTitleDEFactory(DocumentCategoryTitleFactoryBase):
+    """Factory for german ``DocumentCategoryTitle`` objects."""
+    title = 'Ein Titel'
+    language = 'de'
 
 
 class DocumentFactory(factory.Factory):
@@ -25,6 +54,6 @@ class DocumentTitleENFactory(DocumentTitleFactoryBase):
 
 
 class DocumentTitleDEFactory(DocumentTitleFactoryBase):
-    """Factory for english ``DocumentTitle`` objects."""
+    """Factory for german ``DocumentTitle`` objects."""
     title = 'Ein Titel'
     language = 'de'

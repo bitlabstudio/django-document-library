@@ -8,6 +8,48 @@ from filer.fields.file import FilerFileField
 from simple_translation.utils import get_translation_queryset
 
 
+class DocumentCategory(models.Model):
+    """
+    Documents can be grouped in categories.
+
+    See ``DocumentCategoryTitle`` for translateable fields.
+
+    :creation_date: The DateTime when this category was created.
+
+    """
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Creation date'),
+    )
+
+    def __unicode__(self):
+        return self.get_title()
+
+    def get_title(self):
+        lang = get_language()
+        return get_translation_queryset(self).filter(language=lang)[0].title
+
+
+class DocumentCategoryTitle(models.Model):
+    """
+    Translateable fields for the ``DocumentCategory`` model.
+
+    :title: The title of this category.
+
+    """
+    title = models.CharField(
+        max_length=256,
+        verbose_name=_('Title'),
+    )
+
+    # Needed by simple-translation
+    category = models.ForeignKey(
+        DocumentCategory, verbose_name=_('Category'))
+
+    language = models.CharField(
+        max_length=2, verbose_name=_('Language'), choices=settings.LANGUAGES)
+
+
 class Document(models.Model):
     """
     A document consists of a title and description and a number of filer-files.
@@ -24,6 +66,12 @@ class Document(models.Model):
       ``get_frontpage_documents`` templatetag.
 
     """
+    category = models.ForeignKey(
+        DocumentCategory,
+        verbose_name=_('Category'),
+        null=True, blank=True,
+    )
+
     creation_date = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_('Creation date'),
@@ -56,6 +104,13 @@ class Document(models.Model):
     def __unicode__(self):
         return self.get_title()
 
+    def get_filetype(self):
+        lang = get_language()
+        title = get_translation_queryset(self).filter(language=lang)[0]
+        if title.filer_file:
+            return title.filer_file.extension.upper()
+        return _('A/A')
+
     def get_title(self):
         lang = get_language()
         return get_translation_queryset(self).filter(language=lang)[0].title
@@ -86,5 +141,8 @@ class DocumentTitle(models.Model):
     )
 
     # Needed by simple-translation
-    document = models.ForeignKey(Document)
-    language = models.CharField(max_length=5, choices=settings.LANGUAGES)
+    document = models.ForeignKey(
+        Document, verbose_name=_('Document'))
+
+    language = models.CharField(
+        max_length=5, verbose_name=('Language'), choices=settings.LANGUAGES)
