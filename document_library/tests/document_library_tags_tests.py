@@ -35,7 +35,7 @@ class GetFilesForDocumentTestCase(TestCase):
         self.filename = os.path.join(
             settings.MEDIA_ROOT, self.image_name)
         self.img.save(self.filename, 'JPEG')
-        self.file_obj= DjangoFile(open(self.filename), name=self.image_name)
+        self.file_obj = DjangoFile(open(self.filename), name=self.image_name)
         self.image = Image.objects.create(
             owner=self.user, original_filename=self.image_name,
             file=self.file_obj)
