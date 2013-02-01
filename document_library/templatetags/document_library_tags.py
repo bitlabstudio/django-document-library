@@ -1,7 +1,9 @@
 """Templatetags for the ``document_library`` app."""
 from django import template
 
-from document_library.models import DocumentTitle
+from simple_translation.middleware import filter_queryset_language
+
+from document_library.models import Document, DocumentTitle
 
 
 register = template.Library()
@@ -14,3 +16,11 @@ def get_files_for_document(document):
         document=document, filer_file__isnull=False)
     files = [title.filer_file for title in titles]
     return files
+
+
+@register.assignment_tag(takes_context=True)
+def get_frontpage_documents(context):
+    """Returns the library favs that should be shown on the front page."""
+    qs = Document.objects.filter(is_published=True, is_on_front_page=True)
+    qs = filter_queryset_language(context.get('request'), qs)
+    return qs

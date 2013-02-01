@@ -20,6 +20,8 @@ class Document(models.Model):
       enter numbers for positioning here.
     :is_published: If ``False`` the object will be excluded from the library
       views.
+    :is_on_front_page: If ``True`` the object will be returned by the
+      ``get_frontpage_documents`` templatetag.
 
     """
     creation_date = models.DateTimeField(
@@ -41,6 +43,11 @@ class Document(models.Model):
     is_published = models.BooleanField(
         default=False,
         verbose_name=_('Is published'),
+    )
+
+    is_on_front_page = models.BooleanField(
+        default=False,
+        verbose_name=('Is on front page'),
     )
 
     class Meta:

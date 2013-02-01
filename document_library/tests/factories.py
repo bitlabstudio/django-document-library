@@ -21,3 +21,10 @@ class DocumentTitleFactoryBase(factory.Factory):
 class DocumentTitleENFactory(DocumentTitleFactoryBase):
     """Factory for english ``DocumentTitle`` objects."""
     title = 'A title'
+    language = 'en'
+
+
+class DocumentTitleDEFactory(DocumentTitleFactoryBase):
+    """Factory for english ``DocumentTitle`` objects."""
+    title = 'Ein Titel'
+    language = 'de'
