@@ -109,7 +109,7 @@ class Document(models.Model):
         title = get_translation_queryset(self).filter(language=lang)[0]
         if title.filer_file:
             return title.filer_file.extension.upper()
-        return _('A/A')
+        return None
 
     def get_title(self):
         lang = get_language()

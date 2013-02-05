@@ -4,6 +4,7 @@
 - Added templatetag get_frontpage_documents
 - Added tests for templatetags
 - Added DocumentCategory and DocumentCategoryTitle models
+- get_filetype now returns None when it cannot be determined
 
 === 0.1 ===
 
