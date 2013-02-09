@@ -5,7 +5,7 @@ from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
 from filer.fields.file import FilerFileField
-from simple_translation.utils import get_translation_queryset
+from simple_translation.utils import get_preferred_translation_from_lang
 
 
 class DocumentCategory(models.Model):
@@ -27,7 +27,7 @@ class DocumentCategory(models.Model):
 
     def get_title(self):
         lang = get_language()
-        return get_translation_queryset(self).filter(language=lang)[0].title
+        return get_preferred_translation_from_lang(self, lang).title
 
 
 class DocumentCategoryTitle(models.Model):
@@ -106,14 +106,14 @@ class Document(models.Model):
 
     def get_filetype(self):
         lang = get_language()
-        title = get_translation_queryset(self).filter(language=lang)[0]
+        title = get_preferred_translation_from_lang(self, lang)
         if title.filer_file:
             return title.filer_file.extension.upper()
         return None
 
     def get_title(self):
         lang = get_language()
-        return get_translation_queryset(self).filter(language=lang)[0].title
+        return get_preferred_translation_from_lang(self, lang).title
 
 
 class DocumentTitle(models.Model):

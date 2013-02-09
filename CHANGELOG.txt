@@ -5,6 +5,7 @@
 - Added tests for templatetags
 - Added DocumentCategory and DocumentCategoryTitle models
 - get_filetype now returns None when it cannot be determined
+- Properly returning the best available translation for all objects now.
 
 === 0.1 ===
 
