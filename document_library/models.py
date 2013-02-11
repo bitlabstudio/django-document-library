@@ -22,6 +22,11 @@ class DocumentCategory(models.Model):
         verbose_name=_('Creation date'),
     )
 
+    slug = models.SlugField(
+        max_length=32,
+        verbose_name=_('Slug'),
+    )
+
     def __unicode__(self):
         return self.get_title()
 

@@ -6,6 +6,8 @@
 - Added DocumentCategory and DocumentCategoryTitle models
 - get_filetype now returns None when it cannot be determined
 - Properly returning the best available translation for all objects now.
+- Added slug field to DocumentCategory
+- Added list of all categories to template context of plugin
 
 === 0.1 ===
 

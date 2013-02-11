@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from simple_translation.middleware import filter_queryset_language
 
-from document_library.models import Document
+from document_library.models import Document, DocumentCategory
 
 
 class DocumentLibraryPlugin(CMSPluginBase):
@@ -19,6 +19,7 @@ class DocumentLibraryPlugin(CMSPluginBase):
         qs = filter_queryset_language(context.get('request'), qs)
         context.update({
             'documents': qs,
+            'categories': DocumentCategory.objects.all(),
         })
         return context
 
