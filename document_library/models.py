@@ -103,6 +103,21 @@ class Document(models.Model):
         verbose_name=('Is on front page'),
     )
 
+    source_url = models.URLField(
+        verbose_name=_('Source URL'),
+        help_text=_(
+            'Use this if you want to give credit for a downloadable file.'),
+        blank=True,
+    )
+
+    download_url = models.URLField(
+        verbose_name=_('Download URL'),
+        help_text=_(
+            'Use this if you want to link to a file instead of self-hosting'
+            ' it'),
+        blank=True,
+    )
+
     class Meta:
         ordering = ('position', '-creation_date', )
 
@@ -143,6 +158,12 @@ class DocumentTitle(models.Model):
     filer_file = FilerFileField(
         verbose_name=_('File'),
         null=True, blank=True,
+    )
+
+    copyright_notice = models.CharField(
+        max_length=1024,
+        verbose_name=_('Copyright notice'),
+        blank=True,
     )
 
     # Needed by simple-translation

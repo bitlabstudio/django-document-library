@@ -8,6 +8,7 @@
 - Properly returning the best available translation for all objects now.
 - Added slug field to DocumentCategory
 - Added list of all categories to template context of plugin
+- Added source_url and download_url fields to Document model
 
 === 0.1 ===
 

@@ -4,8 +4,12 @@
     <h2>{{ document_title.title }}</h2>
     <p>{{ document_title.description }}</p>
     {% endwith %}
-    {% get_files_for_document document as files %}
-    {% for file in files %}
-        <p><a href="{{ file.url }}">{{ file.name|default:file.original_filename }}</a></p>
-    {% endfor %}
+    {% if document.download_url %}
+        <p><a href="{{ document.download_url }}">{{ document.download_url }}</a></p>
+    {% else %}
+        {% get_files_for_document document as files %}
+        {% for file in files %}
+            <p><a href="{{ file.url }}">{{ file.name|default:file.original_filename }}</a></p>
+        {% endfor %}
+    {% endif %}
 {% endfor %}
