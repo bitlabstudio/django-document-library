@@ -9,6 +9,7 @@
 - Added slug field to DocumentCategory
 - Added list of all categories to template context of plugin
 - Added source_url and download_url fields to Document model
+- Added cms_apps.py and a detail view
 
 === 0.1 ===
 

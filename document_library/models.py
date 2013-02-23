@@ -1,10 +1,12 @@
 """Models for the ``document_library`` app."""
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
 from filer.fields.file import FilerFileField
+from simple_translation.middleware import filter_queryset_language
 from simple_translation.utils import get_preferred_translation_from_lang
 
 
@@ -53,6 +55,21 @@ class DocumentCategoryTitle(models.Model):
 
     language = models.CharField(
         max_length=2, verbose_name=_('Language'), choices=settings.LANGUAGES)
+
+
+class DocumentManager(models.Manager):
+    """Custom manager for the ``Document`` model."""
+    def published(self, request):
+        """
+        Returns the published documents in the current language.
+
+        :param request: A Request instance.
+
+        """
+        qs = self.get_query_set()
+        qs = qs.filter(is_published=True)
+        qs = filter_queryset_language(request, qs)
+        return qs
 
 
 class Document(models.Model):
@@ -118,11 +135,17 @@ class Document(models.Model):
         blank=True,
     )
 
+    objects = DocumentManager()
+
     class Meta:
         ordering = ('position', '-creation_date', )
 
     def __unicode__(self):
         return self.get_title()
+
+    def get_absolute_url(self):
+        return reverse('document_library_detail', kwargs={
+            'pk': self.pk })
 
     def get_filetype(self):
         lang = get_language()

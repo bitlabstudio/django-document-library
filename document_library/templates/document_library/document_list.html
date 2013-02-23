@@ -1,7 +1,8 @@
 {% load simple_translation_tags document_library_tags %}
-{% for document in documents %}
+{% load url form future %}
+{% for document in object_list %}
     {% with document|get_preferred_translation_from_request:request as document_title %}
-    <h2>{{ document_title.title }}</h2>
+    <h2><a href="{{ document.get_absolute_url }}">{{ document_title.title }}</a></h2>
     <p>{{ document_title.description }}</p>
     {% endwith %}
     {% if document.download_url %}

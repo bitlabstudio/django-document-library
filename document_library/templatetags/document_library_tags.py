@@ -21,6 +21,6 @@ def get_files_for_document(document):
 @register.assignment_tag(takes_context=True)
 def get_frontpage_documents(context):
     """Returns the library favs that should be shown on the front page."""
-    qs = Document.objects.filter(is_published=True, is_on_front_page=True)
-    qs = filter_queryset_language(context.get('request'), qs)
+    req = context.get('request')
+    qs = Document.objects.published(req).filter(is_on_front_page=True)
     return qs
