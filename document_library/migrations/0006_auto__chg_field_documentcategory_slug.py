@@ -12,9 +12,6 @@ class Migration(SchemaMigration):
 
         # Changing field 'DocumentCategory.slug'
         db.alter_column('document_library_documentcategory', 'slug', self.gf('django.db.models.fields.SlugField')(max_length=32))
-        # Adding index on 'DocumentCategory', fields ['slug']
-        db.create_index('document_library_documentcategory', ['slug'])
-
 
     def backwards(self, orm):
         # Removing index on 'DocumentCategory', fields ['slug']

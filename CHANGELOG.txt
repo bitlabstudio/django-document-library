@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Fixed broken migration
+
 === 0.2 ===
 
 - Added is_on_front_page field to Document model.
