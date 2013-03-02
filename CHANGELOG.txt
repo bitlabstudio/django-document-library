@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 0.2.1 ===
+
 - Fixed broken migration
 
 === 0.2 ===
