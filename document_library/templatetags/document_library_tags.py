@@ -1,8 +1,6 @@
 """Templatetags for the ``document_library`` app."""
 from django import template
 
-from simple_translation.middleware import filter_queryset_language
-
 from document_library.models import Document, DocumentTitle
 
 

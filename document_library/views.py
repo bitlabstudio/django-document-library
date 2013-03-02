@@ -1,8 +1,5 @@
 """Views for the ``document_library`` app."""
 from django.views.generic import DetailView, ListView
-from django.utils import timezone
-
-from simple_translation.middleware import filter_queryset_language
 
 from .models import Document, DocumentCategory
 

@@ -145,7 +145,7 @@ class Document(models.Model):
 
     def get_absolute_url(self):
         return reverse('document_library_detail', kwargs={
-            'pk': self.pk })
+            'pk': self.pk, })
 
     def get_filetype(self):
         lang = get_language()
