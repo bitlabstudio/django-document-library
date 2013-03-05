@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
+from cmsplugin_blog.admin import M2MPlaceholderAdmin
 from simple_translation.admin import TranslationAdmin
 from simple_translation.utils import get_preferred_translation_from_lang
 
@@ -19,9 +20,10 @@ class DocumentCategoryAdmin(TranslationAdmin):
     title.short_description = _('Title')
 
 
-class DocumentAdmin(TranslationAdmin):
+class DocumentAdmin(M2MPlaceholderAdmin):
     """Admin class for the ``Document`` model."""
-    list_display = ['title', 'position', 'user', 'languages', ]
+    list_display = [
+        'title', 'position', 'user', 'is_on_front_page', 'languages', ]
 
     def title(self, obj):
         lang = get_language()

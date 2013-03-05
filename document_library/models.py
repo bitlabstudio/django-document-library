@@ -5,12 +5,15 @@ from django.db import models
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
+from django_libs.models_mixins import SimpleTranslationMixin
+from djangocms_utils.fields import M2MPlaceholderField
 from filer.fields.file import FilerFileField
+from simple_translation.actions import SimpleTranslationPlaceholderActions
 from simple_translation.middleware import filter_queryset_language
 from simple_translation.utils import get_preferred_translation_from_lang
 
 
-class DocumentCategory(models.Model):
+class DocumentCategory(SimpleTranslationMixin, models.Model):
     """
     Documents can be grouped in categories.
 
@@ -72,7 +75,7 @@ class DocumentManager(models.Manager):
         return qs
 
 
-class Document(models.Model):
+class Document(SimpleTranslationMixin, models.Model):
     """
     A document consists of a title and description and a number of filer-files.
 
@@ -135,6 +138,21 @@ class Document(models.Model):
         blank=True,
     )
 
+    placeholders = M2MPlaceholderField(
+        actions=SimpleTranslationPlaceholderActions(),
+        placeholders=('content', ),
+    )
+
+    creation_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Creation date'),
+    )
+
+    update_date = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_('Update date'),
+    )
+
     objects = DocumentManager()
 
     class Meta:
@@ -174,7 +192,7 @@ class DocumentTitle(models.Model):
     )
 
     description = models.TextField(
-        verbose_name=_('Description'),
+        verbose_name=_('Short description'),
         blank=True,
     )
 
