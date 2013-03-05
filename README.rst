@@ -32,6 +32,21 @@ Run the South migrations::
     ./manage.py migrate document_library
 
 
+Admin inline
+------------
+
+You can attach documents to any model. To make things easier, you can add
+a tabular inline to your model's admin which allows to attach documents.
+
+In your project's ``models.py`` or any file that get's loaded early, do the
+following::
+
+    from yourapp.admin import YourAdmin
+    from object_attachments.admin import ObjectAttachmentInline
+
+    YourAdmin.inlines = YourAdmin.inlines[:] + [ObjectAttachmentInline]
+
+
 Templatetags
 ------------
 
