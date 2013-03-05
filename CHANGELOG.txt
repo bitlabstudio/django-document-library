@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 0.3 ===
+
 - Added new fields to Document model: Placeholders (for long description),
   creation_date and update_date
 - Added is_on_front_page column to admin list view
