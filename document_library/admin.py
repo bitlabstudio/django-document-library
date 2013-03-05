@@ -1,5 +1,6 @@
 """Admin classes for the ``document_library`` app."""
 from django.contrib import admin
+from django.contrib.contenttypes.generic import GenericTabularInline
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,7 +8,13 @@ from cmsplugin_blog.admin import M2MPlaceholderAdmin
 from simple_translation.admin import TranslationAdmin
 from simple_translation.utils import get_preferred_translation_from_lang
 
-from document_library.models import Document, DocumentCategory
+from .models import Attachment, Document, DocumentCategory
+
+
+class AttachmentInline(GenericTabularInline):
+    model = Attachment
+    extra = 1
+    raw_id_fields = ['document', ]
 
 
 class DocumentCategoryAdmin(TranslationAdmin):

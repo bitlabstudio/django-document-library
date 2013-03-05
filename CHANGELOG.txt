@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Added Attachment model and GenericTabularInlineAdmin
+
 === 0.3 ===
 
 - Added new fields to Document model: Placeholders (for long description),

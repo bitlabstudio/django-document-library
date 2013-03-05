@@ -1,9 +1,13 @@
 """Models for the ``document_library`` app."""
 from django.conf import settings
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
+
+
 
 from django_libs.models_mixins import SimpleTranslationMixin
 from djangocms_utils.fields import M2MPlaceholderField
@@ -11,6 +15,32 @@ from filer.fields.file import FilerFileField
 from simple_translation.actions import SimpleTranslationPlaceholderActions
 from simple_translation.middleware import filter_queryset_language
 from simple_translation.utils import get_preferred_translation_from_lang
+
+
+class Attachment(models.Model):
+    """
+    Mapping class to map any object to ``Document`` objects.
+
+    This allows you to add inlines to your admins and attach documents to
+    your objects.
+
+    """
+    document = models.ForeignKey(
+        'document_library.Document',
+        verbose_name=_('Document'),
+    )
+
+    position = models.PositiveIntegerField(
+        verbose_name=_('Position'),
+        null=True, blank=True,
+    )
+
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        ordering = ['position', ]
 
 
 class DocumentCategory(SimpleTranslationMixin, models.Model):

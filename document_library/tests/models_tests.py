@@ -2,11 +2,22 @@
 from django.test import TestCase
 
 from document_library.tests.factories import (
+    AttachmentFactory,
     DocumentFactory,
     DocumentCategoryFactory,
     DocumentCategoryTitleENFactory,
     DocumentTitleENFactory,
 )
+
+
+class AttachmentTestCase(TestCase):
+    """Tests for the ``Attachment`` model."""
+    longMessage = True
+
+    def test_model(self):
+        obj = AttachmentFactory()
+        self.assertTrue(obj.pk, msg=(
+            'Should be able to instantiate and save the model.'))
 
 
 class DocumentTestCase(TestCase):
