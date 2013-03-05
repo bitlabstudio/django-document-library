@@ -7,8 +7,6 @@ from django.db import models
 from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
-
-
 from django_libs.models_mixins import SimpleTranslationMixin
 from djangocms_utils.fields import M2MPlaceholderField
 from filer.fields.file import FilerFileField
