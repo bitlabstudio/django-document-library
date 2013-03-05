@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 0.4 ===
+
 - Added Attachment model and GenericTabularInlineAdmin
 
 === 0.3 ===
