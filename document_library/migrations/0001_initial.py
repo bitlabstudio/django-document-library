@@ -8,6 +8,11 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("filer", "0001_initial"),
+        ("cms", "0001_initial"),
+    )
+
     def forwards(self, orm):
         # Adding model 'Document'
         db.create_table('document_library_document', (

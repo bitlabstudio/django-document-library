@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Fixed broken migration.
+
 === 0.4 ===
 
 - Added Attachment model and GenericTabularInlineAdmin
