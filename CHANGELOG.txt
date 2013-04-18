@@ -1,5 +1,7 @@
 === ongoing ===
 
+- changed is_published behaviour to allow publishing of distinct languages.
+
 === 0.4.1 ===
 
 - Fixed broken migration.

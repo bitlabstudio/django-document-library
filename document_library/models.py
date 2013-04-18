@@ -99,7 +99,7 @@ class DocumentManager(models.Manager):
         qs = self.get_query_set()
         language = getattr(request, 'LANGUAGE_CODE', None)
         if not language:
-            return qs
+            return qs.filter(documenttitle__is_published=True)
         qs = qs.filter(
             documenttitle__is_published=True,
             documenttitle__language=language,
