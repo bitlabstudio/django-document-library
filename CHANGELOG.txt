@@ -1,5 +1,8 @@
 === ongoing ===
 
+
+=== 0.5 ===
+
 - changed is_published behaviour to allow publishing of distinct languages.
 
 === 0.4.1 ===
