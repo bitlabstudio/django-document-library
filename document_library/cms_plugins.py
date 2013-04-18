@@ -15,7 +15,7 @@ class DocumentLibraryPlugin(CMSPluginBase):
     render_template = "document_library/document_library_plugin.html"
 
     def render(self, context, instance, placeholder):
-        qs = Document.objects.filter(is_published=True)
+        qs = Document.objects.published(context.get('request')).all()
         qs = filter_queryset_language(context.get('request'), qs)
         context.update({
             'documents': qs,

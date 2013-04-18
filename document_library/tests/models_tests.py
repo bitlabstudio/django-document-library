@@ -1,11 +1,15 @@
 """Tests for the models of the ``document_library`` app."""
+from mock import Mock
+
 from django.test import TestCase
 
-from document_library.tests.factories import (
+from ..models import Document
+from .factories import (
     AttachmentFactory,
     DocumentFactory,
     DocumentCategoryFactory,
     DocumentCategoryTitleENFactory,
+    DocumentTitleDEFactory,
     DocumentTitleENFactory,
 )
 
@@ -69,6 +73,27 @@ class DocumentCategoryTitleTestCase(TestCase):
         instance = DocumentCategoryTitleENFactory()
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
+
+
+class DocumentManagerTestCase(TestCase):
+    """Tests for the ``DocumentManager`` model manager."""
+    longMessage = True
+
+    def setUp(self):
+        self.en_title = DocumentTitleENFactory(is_published=False)
+        self.de_title = DocumentTitleDEFactory(document=self.en_title.document)
+
+    def test_manager(self):
+        """Testing if the ``DocumentManager`` retrieves the correct objects."""
+        request = Mock(LANGUAGE_CODE='de')
+        self.assertEqual(
+            Document.objects.published(request).count(), 1, msg=(
+                'In German, there should be one published document.'))
+
+        request = Mock(LANGUAGE_CODE='en')
+        self.assertEqual(
+            Document.objects.published(request).count(), 0, msg=(
+                'In English, there should be no published documents.'))
 
 
 class DocumentTitleTestCase(TestCase):

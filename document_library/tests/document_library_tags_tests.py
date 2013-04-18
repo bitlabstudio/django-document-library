@@ -17,7 +17,6 @@ from document_library.templatetags.document_library_tags import (
     get_frontpage_documents,
 )
 from document_library.tests.factories import (
-    DocumentFactory,
     DocumentTitleDEFactory,
     DocumentTitleENFactory,
 )
@@ -63,11 +62,11 @@ class GetFrontpageDocumentsTestCase(TestCase):
     def setUp(self):
         super(GetFrontpageDocumentsTestCase, self).setUp()
         # Two documents that should be on the front page
-        DocumentFactory(is_on_front_page=True)
-        DocumentFactory(is_on_front_page=True)
+        DocumentTitleENFactory(document__is_on_front_page=True)
+        DocumentTitleDEFactory(document__is_on_front_page=True)
 
         # And one that should not be on the front page
-        DocumentFactory()
+        DocumentTitleDEFactory()
 
     def test_tag(self):
         req = RequestFactory().get('/')

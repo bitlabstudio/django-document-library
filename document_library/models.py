@@ -11,7 +11,6 @@ from django_libs.models_mixins import SimpleTranslationMixin
 from djangocms_utils.fields import M2MPlaceholderField
 from filer.fields.file import FilerFileField
 from simple_translation.actions import SimpleTranslationPlaceholderActions
-from simple_translation.middleware import filter_queryset_language
 from simple_translation.utils import get_preferred_translation_from_lang
 
 
@@ -98,8 +97,13 @@ class DocumentManager(models.Manager):
 
         """
         qs = self.get_query_set()
-        qs = qs.filter(is_published=True)
-        qs = filter_queryset_language(request, qs)
+        language = getattr(request, 'LANGUAGE_CODE', None)
+        if not language:
+            return qs
+        qs = qs.filter(
+            documenttitle__is_published=True,
+            documenttitle__language=language,
+        )
         return qs
 
 
@@ -113,7 +117,6 @@ class Document(SimpleTranslationMixin, models.Model):
     :user: Optional FK to the User who created this document.
     :position: If you want to order the documents other than by creation date,
       enter numbers for positioning here.
-    :is_published: If ``False`` the object will be excluded from the library
       views.
     :is_on_front_page: If ``True`` the object will be returned by the
       ``get_frontpage_documents`` templatetag.
@@ -207,6 +210,7 @@ class DocumentTitle(models.Model):
     :title: The title of the document.
     :description: A short description of the document.
     :filer_file: FK to the File of the document version for this language.
+    :is_published: If ``False`` the object will be excluded from the library
 
     """
     title = models.CharField(
