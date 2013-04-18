@@ -141,11 +141,6 @@ class Document(SimpleTranslationMixin, models.Model):
         null=True, blank=True,
     )
 
-    is_published = models.BooleanField(
-        default=False,
-        verbose_name=_('Is published'),
-    )
-
     is_on_front_page = models.BooleanField(
         default=False,
         verbose_name=('Is on front page'),
