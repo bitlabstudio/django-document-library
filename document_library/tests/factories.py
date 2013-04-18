@@ -44,14 +44,13 @@ class DocumentFactory(factory.Factory):
     """Factory for the ``Document`` model."""
     FACTORY_FOR = Document
 
-    is_published = True
-
 
 class DocumentTitleFactoryBase(factory.Factory):
     """Base factory for factories for ``DocumentTitle`` models."""
     FACTORY_FOR = DocumentTitle
 
     document = factory.SubFactory(DocumentFactory)
+    is_published = True
 
 
 class DocumentTitleENFactory(DocumentTitleFactoryBase):
