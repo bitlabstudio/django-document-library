@@ -235,6 +235,11 @@ class DocumentTitle(models.Model):
         blank=True,
     )
 
+    is_published = models.BooleanField(
+        verbose_name=_('Is published'),
+        default=False,
+    )
+
     # Needed by simple-translation
     document = models.ForeignKey(
         Document, verbose_name=_('Document'))
