@@ -96,10 +96,11 @@ class DocumentManager(models.Manager):
         :param request: A Request instance.
 
         """
-        qs = self.get_query_set()
         language = getattr(request, 'LANGUAGE_CODE', None)
         if not language:
-            return qs.filter(documenttitle__is_published=True)
+            return self.model.objects.none()
+
+        qs = self.get_query_set()
         qs = qs.filter(
             documenttitle__is_published=True,
             documenttitle__language=language,

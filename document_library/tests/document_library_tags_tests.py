@@ -62,15 +62,34 @@ class GetFrontpageDocumentsTestCase(TestCase):
     def setUp(self):
         super(GetFrontpageDocumentsTestCase, self).setUp()
         # Two documents that should be on the front page
-        DocumentTitleENFactory(document__is_on_front_page=True)
-        DocumentTitleDEFactory(document__is_on_front_page=True)
+        self.en_title = DocumentTitleENFactory(document__is_on_front_page=True)
+        self.de_title = DocumentTitleDEFactory(document__is_on_front_page=True)
 
         # And one that should not be on the front page
         DocumentTitleDEFactory()
 
     def test_tag(self):
         req = RequestFactory().get('/')
+        req.LANGUAGE_CODE = 'en'
         context = RequestContext(req)
         result = get_frontpage_documents(context)
-        self.assertEqual(result.count(), 2, msg=(
-            'Should return the two documents that have is_on_fron_page=True'))
+        self.assertEqual(result.count(), 1, msg=(
+            'It should only return one document.'))
+        self.assertEqual(result[0], self.en_title.document, msg=(
+            'Should return the one english document that has'
+            ' is_on_fron_page=True'))
+
+        req.LANGUAGE_CODE = 'de'
+        context = RequestContext(req)
+        result = get_frontpage_documents(context)
+        self.assertEqual(result.count(), 1, msg=(
+            'It should only return one document.'))
+        self.assertEqual(result[0], self.de_title.document, msg=(
+            'Should return the one german document that has'
+            ' is_on_fron_page=True'))
+
+        req = RequestFactory().get('/')
+        context = RequestContext(req)
+        result = get_frontpage_documents(context)
+        self.assertEqual(result.count(), 0, msg=(
+            'It should return no documents, if no language is set.'))

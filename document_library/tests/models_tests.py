@@ -81,7 +81,9 @@ class DocumentManagerTestCase(TestCase):
 
     def setUp(self):
         self.en_title = DocumentTitleENFactory(is_published=False)
-        self.de_title = DocumentTitleDEFactory(document=self.en_title.document)
+        self.de_title = DocumentTitleDEFactory(is_published=False)
+        DocumentTitleENFactory(document=self.de_title.document)
+        DocumentTitleDEFactory(document=self.en_title.document)
 
     def test_manager(self):
         """Testing if the ``DocumentManager`` retrieves the correct objects."""
@@ -92,8 +94,14 @@ class DocumentManagerTestCase(TestCase):
 
         request = Mock(LANGUAGE_CODE='en')
         self.assertEqual(
+            Document.objects.published(request).count(), 1, msg=(
+                'In English, there should be one published document.'))
+
+        request = Mock(LANGUAGE_CODE=None)
+        self.assertEqual(
             Document.objects.published(request).count(), 0, msg=(
-                'In English, there should be no published documents.'))
+                'If no language is set, there should be no published'
+                ' documents.'))
 
 
 class DocumentTitleTestCase(TestCase):
