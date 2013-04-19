@@ -1,5 +1,8 @@
 === ongoing ===
 
+=== 0.5.1 ===
+
+- Updated the logic of the DocumentManager
 
 === 0.5 ===
 
