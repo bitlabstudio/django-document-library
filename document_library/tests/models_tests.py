@@ -3,7 +3,7 @@ from mock import Mock
 
 from django.test import TestCase
 
-from ..models import Document
+from ..models import Document, DocumentPlugin
 from .factories import (
     AttachmentFactory,
     DocumentFactory,
@@ -102,6 +102,17 @@ class DocumentManagerTestCase(TestCase):
             Document.objects.published(request).count(), 0, msg=(
                 'If no language is set, there should be no published'
                 ' documents.'))
+
+
+class DocumentPluginTestCase(TestCase):
+    """Tests for the ``DocumentPlugin`` model."""
+    longMessage = True
+
+    def test_model(self):
+        instance = DocumentPlugin(document=DocumentFactory())
+        instance.save()
+        self.assertTrue(instance.pk, msg=(
+            'Should be able to instantiate and save the object.'))
 
 
 class DocumentTitleTestCase(TestCase):

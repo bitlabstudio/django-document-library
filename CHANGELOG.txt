@@ -1,5 +1,8 @@
 === ongoing ===
 
+- Added DocumentPlugin model
+- updated the get_files_for_document templatetag
+
 === 0.5.1 ===
 
 - Updated the logic of the DocumentManager

@@ -50,9 +50,8 @@ class GetFilesForDocumentTestCase(TestCase):
 
     def test_tag(self):
         result = get_files_for_document(self.doc_en.document)
-        self.assertEqual(len(result), 2, msg=(
-            'Should return all available files for all languages for the given'
-            ' document'))
+        self.assertEqual(len(result), 1, msg=(
+            'Should return only the english file for the given document'))
 
 
 class GetFrontpageDocumentsTestCase(TestCase):
