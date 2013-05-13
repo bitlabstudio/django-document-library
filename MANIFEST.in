@@ -3,7 +3,7 @@ include LICENSE
 include DESCRIPTION
 include CHANGELOG.txt
 include README.md
-graft document_library 
-global-exclude *.orig *.pyc *.log
+graft document_library
+global-exclude *.orig *.pyc *.log *.swp
 prune document_library/tests/coverage
 prune document_library/.ropeproject
