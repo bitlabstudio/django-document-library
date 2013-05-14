@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 0.6.1 ===
+
 - cleaned up code and updated verbose name
 
 === 0.6 ===
