@@ -113,7 +113,7 @@ class DocumentPlugin(CMSPlugin):
     """Class to extend the `CMSPlugin` pluginmodel."""
     document = models.ForeignKey(
         'document_library.Document',
-        verbose_name=_('Document plugin'),
+        verbose_name=_('Document'),
     )
 
 
