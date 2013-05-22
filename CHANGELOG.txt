@@ -1,5 +1,8 @@
 === ongoing ===
 
+
+=== 0.6.2 ===
+
 - Using the MultilingualPublishMixin from django-libs
 
 === 0.6.1 ===
