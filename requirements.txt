@@ -4,7 +4,7 @@
 # Packages essential to this app. Needed by anyone who wants to use this app.
 # ===========================================================================
 django==1.4.3
-django-libs==1.0
+django-libs
 Pillow==1.7.8
 django-cms==2.3.5
 djangocms-utils==0.9.5

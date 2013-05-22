@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Using the MultilingualPublishMixin from django-libs
+
 === 0.6.1 ===
 
 - cleaned up code and updated verbose name
