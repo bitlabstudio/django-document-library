@@ -221,6 +221,7 @@ class DocumentTitle(models.Model):
     :description: A short description of the document.
     :filer_file: FK to the File of the document version for this language.
     :is_published: If ``False`` the object will be excluded from the library
+    :meta_description: The meta description to display for the detail page.
 
     """
     title = models.CharField(
@@ -249,9 +250,22 @@ class DocumentTitle(models.Model):
         default=False,
     )
 
+    meta_description = models.TextField(
+        max_length=512,
+        verbose_name=_('Meta description'),
+        blank=True,
+    )
+
     # Needed by simple-translation
     document = models.ForeignKey(
         Document, verbose_name=_('Document'))
 
     language = models.CharField(
         max_length=5, verbose_name=('Language'), choices=settings.LANGUAGES)
+
+    def get_meta_description(self):
+        if self.meta_description:
+            return self.meta_description
+        if len(self.description) > 160:
+            return '{}...'.format(self.description[:160])
+        return self.description

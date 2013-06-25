@@ -1,5 +1,6 @@
 === ongoing ===
 
+- Added meta_description field to the DocumentTitle model
 
 === 0.6.2 ===
 
