@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Added setting DOCUMENT_LIBRARY_LOGIN_REQUIRED to secure the views
+
 === 0.7 ===
 
 - Added thumbnail field to DocumentTitle model

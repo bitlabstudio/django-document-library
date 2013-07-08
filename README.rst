@@ -78,6 +78,18 @@ frontpage::
     </ul>
 
 
+Settings
+--------
+
+DOCUMENT_LIBRARY_LOGIN_REQUIRED
++++++++++++++++++++++++++++++++
+
+Default: ``False``
+
+Set this to ``True`` if you wand to require login for the views of this app.
+
+
+
 Contribute
 ----------
 

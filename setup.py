@@ -23,6 +23,9 @@ setup(
     url="https://github.com/bitmazk/django-document-library",
     packages=find_packages(),
     include_package_data=True,
+    install_requires=[
+        'django-libs>=1.13',
+    ],
     tests_require=[
         'fabric',
         'factory_boy',
