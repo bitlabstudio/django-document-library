@@ -48,6 +48,8 @@ class DocumentCategory(SimpleTranslationMixin, models.Model):
     See ``DocumentCategoryTitle`` for translateable fields.
 
     :creation_date: The DateTime when this category was created.
+    :slug: The slug of this category. E.g. used for filtering.
+    :is_published: If the category should be visible to the public.
 
     """
     creation_date = models.DateTimeField(
@@ -58,6 +60,11 @@ class DocumentCategory(SimpleTranslationMixin, models.Model):
     slug = models.SlugField(
         max_length=32,
         verbose_name=_('Slug'),
+    )
+
+    is_published = models.BooleanField(
+        verbose_name=_('Is published'),
+        default=False,
     )
 
     def __unicode__(self):
@@ -106,6 +113,10 @@ class DocumentManager(models.Manager):
             documenttitle__is_published=True,
             documenttitle__language=language,
         )
+        # either it has no category or the one it has is published
+        qs = qs.filter(
+            models.Q(category__isnull=True) |
+            models.Q(category__is_published=True))
         return qs
 
 
@@ -123,13 +134,15 @@ class Document(SimpleTranslationMixin, models.Model):
 
     See ``DocumentTitle`` for the translateable fields of this model.
 
-    :creation_date: DateTime when this document was created.
+    :creation_date: DateTime when this Document object was created.
     :user: Optional FK to the User who created this document.
     :position: If you want to order the documents other than by creation date,
       enter numbers for positioning here.
       views.
     :is_on_front_page: If ``True`` the object will be returned by the
       ``get_frontpage_documents`` templatetag.
+    :document_date: The date of the document itself. Don't confuse this with
+      creation_date.
 
     """
     category = models.ForeignKey(
@@ -187,6 +200,11 @@ class Document(SimpleTranslationMixin, models.Model):
     update_date = models.DateTimeField(
         auto_now=True,
         verbose_name=_('Update date'),
+    )
+
+    document_date = models.DateTimeField(
+        verbose_name=_('Document date'),
+        blank=True, null=True,
     )
 
     objects = DocumentManager()

@@ -80,9 +80,17 @@ class DocumentManagerTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        self.en_title = DocumentTitleENFactory(is_published=False)
-        self.de_title = DocumentTitleDEFactory(is_published=False)
+        self.en_title = DocumentTitleENFactory(
+            document__category=DocumentCategoryFactory(is_published=True),
+            is_published=False)
+        self.de_title = DocumentTitleDEFactory(
+            document__category=DocumentCategoryFactory(is_published=True),
+            is_published=False)
+        self.de_title_no_public_cat = DocumentTitleDEFactory(
+            document__category=DocumentCategoryFactory(is_published=False),
+            is_published=False)
         DocumentTitleENFactory(document=self.de_title.document)
+        DocumentTitleENFactory(document=self.de_title_no_public_cat.document)
         DocumentTitleDEFactory(document=self.en_title.document)
 
     def test_manager(self):
