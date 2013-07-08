@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 0.7 ===
+
 - Added thumbnail field to DocumentTitle model
 
 === 0.6.3 ===
