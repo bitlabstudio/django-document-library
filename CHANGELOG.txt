@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 0.8 ===
+
 - Added setting DOCUMENT_LIBRARY_LOGIN_REQUIRED to secure the views
 
 === 0.7 ===
