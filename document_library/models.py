@@ -220,6 +220,7 @@ class DocumentTitle(models.Model):
     :title: The title of the document.
     :description: A short description of the document.
     :filer_file: FK to the File of the document version for this language.
+    :thumbnail: A thumbnail for the document.
     :is_published: If ``False`` the object will be excluded from the library
     :meta_description: The meta description to display for the detail page.
 
@@ -236,6 +237,13 @@ class DocumentTitle(models.Model):
 
     filer_file = FilerFileField(
         verbose_name=_('File'),
+        related_name='document_files',
+        null=True, blank=True,
+    )
+
+    thumbnail = FilerFileField(
+        verbose_name=_('Thumbnail'),
+        related_name='document_thumbnails',
         null=True, blank=True,
     )
 
