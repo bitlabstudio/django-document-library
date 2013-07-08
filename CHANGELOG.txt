@@ -1,5 +1,10 @@
 === ongoing ===
 
+
+=== 0.9 ===
+
+- Added is_published to DocumentCategory and document_date to document
+
 === 0.8 ===
 
 - Added setting DOCUMENT_LIBRARY_LOGIN_REQUIRED to secure the views
