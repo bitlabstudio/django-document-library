@@ -1,6 +1,11 @@
 === ongoing ===
 
 
+=== 0.9.1 ===
+
+- fixed unicode bug
+
+
 === 0.9 ===
 
 - Added is_published to DocumentCategory and document_date to document

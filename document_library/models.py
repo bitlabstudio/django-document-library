@@ -293,5 +293,6 @@ class DocumentTitle(models.Model):
         if self.meta_description:
             return self.meta_description
         if len(self.description) > 160:
-            return '{}...'.format(self.description[:160])
-        return self.description
+            desc = self.description.encode('utf-8').replace('"', '&quot;')
+            return '{}...'.format(desc[:160])
+        return self.description.replace('"', '&quot;')
