@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
 """Tests for the models of the ``document_library`` app."""
+from __future__ import unicode_literals
+
 from mock import Mock
 
+from django.contrib.webdesign.lorem_ipsum import paragraphs
 from django.test import TestCase
 
 from ..models import Document, DocumentPlugin
@@ -133,13 +137,14 @@ class DocumentTitleTestCase(TestCase):
             'Should be able to instantiate and save the object.'))
 
     def test_get_meta_description(self):
-        obj = DocumentTitleENFactory(description='bar')
-        self.assertEqual(obj.get_meta_description(), 'bar')
+        title = DocumentTitleDEFactory(description='ä "description"')
+        self.assertEqual(title.get_meta_description(),
+                         title.description.replace('"', '&quot;'))
 
-        obj.description = ''.join(['a' for i in range(0, 200)])
+        title.description = paragraphs(1)[0]
+        self.assertEqual(title.get_meta_description(),
+                         paragraphs(1)[0][:160]+'...')
 
-        self.assertEqual(obj.get_meta_description(),
-                         ''.join(['a' for i in range(0, 160)])+'...')
-
-        obj.meta_description = 'foo'
-        self.assertEqual(obj.get_meta_description(), 'foo')
+        title.meta_description = paragraphs(1)[0]
+        self.assertEqual(title.get_meta_description(),
+                         paragraphs(1)[0])

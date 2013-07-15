@@ -1,4 +1,6 @@
 """Models for the ``document_library`` app."""
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -293,6 +295,6 @@ class DocumentTitle(models.Model):
         if self.meta_description:
             return self.meta_description
         if len(self.description) > 160:
-            desc = self.description.encode('utf-8').replace('"', '&quot;')
+            desc = self.description.replace('"', '&quot;')
             return '{}...'.format(desc[:160])
         return self.description.replace('"', '&quot;')

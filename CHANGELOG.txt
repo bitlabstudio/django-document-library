@@ -1,10 +1,11 @@
 === ongoing ===
 
 
+- exchanged the ugly encode call for a unicode_literals import from future
+
 === 0.9.1 ===
 
 - fixed unicode bug
-
 
 === 0.9 ===
 
