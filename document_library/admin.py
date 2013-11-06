@@ -20,7 +20,7 @@ class AttachmentInline(GenericTabularInline):
 
 class DocumentCategoryAdmin(TranslationAdmin):
     """Admin class for the ``DocumentCategory`` model."""
-    list_display = ['title', 'languages', ]
+    list_display = ['title', 'languages', 'is_published']
 
     def title(self, obj):
         lang = get_language()
@@ -31,8 +31,9 @@ class DocumentCategoryAdmin(TranslationAdmin):
 class DocumentAdmin(MultilingualPublishMixin, M2MPlaceholderAdmin):
     """Admin class for the ``Document`` model."""
     list_display = [
-        'title', 'position', 'user', 'is_on_front_page', 'languages',
-        'is_published']
+        'title', 'category', 'position', 'user', 'is_on_front_page',
+        'languages', 'is_published',
+    ]
 
     def title(self, obj):
         lang = get_language()
