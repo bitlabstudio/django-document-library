@@ -22,6 +22,10 @@ LANGUAGES = (
     ('de', 'German'),
 )
 
+JQUERY_UI_CSS = ''
+JQUERY_UI_JS = ''
+JQUERY_JS = ''
+
 ROOT_URLCONF = 'document_library.tests.urls'
 
 STATIC_URL = '/static/'
@@ -94,6 +98,7 @@ EXTERNAL_APPS = [
     'filer',
     'mptt',
     'easy_thumbnails',
+    'cmsplugin_blog',
     'simple_translation',
 ]
 
