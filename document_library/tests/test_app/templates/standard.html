@@ -1,15 +1,20 @@
-{% load cms_tags sekizai_tags menu_tags %}
 <!DOCTYPE html>
-<html lang="en">
+{% load document_library_tags cms_tags menu_tags sekizai_tags static %}
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <title>testapp</title>
+    {% block extrahead %}{% endblock %}
     {% render_block "css" %}
 </head>
 <body>
-    {% language_chooser %}
-    {% show_menu 0 100 100 100 %}
-    {% placeholder content %}
+    {% cms_toolbar %}
+    {% show_menu %}
+    {% placeholder base_content %}
+    {% get_frontpage_documents as fpdocs %}
+    {% for doc in fpdocs %} 
+        {{ doc }}
+    {% endfor %}
+    {% block main %}{% endblock %}
     {% render_block "js" %}
 </body>
 </html>
