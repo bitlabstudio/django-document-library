@@ -52,7 +52,7 @@ class DocumentCategoryTestCase(TestCase):
     def test_get_title(self):
         instance = DocumentFactory()
         result = instance.get_title()
-        self.assertEqual(result, 'A title', msg=(
+        self.assertEqual(result, instance.title, msg=(
             'Should return the translated title.'))
 
 
@@ -61,19 +61,24 @@ class DocumentManagerTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        # TODO make this test work again with the new factories
         self.en_doc = DocumentFactory(
-            document__category=DocumentCategoryFactory(is_published=True),
-            is_published=False)
+            category=DocumentCategoryFactory(is_published=True),
+            language_code='en', is_published=False)
         self.de_doc = DocumentFactory(
-            document__category=DocumentCategoryFactory(is_published=True),
-            is_published=False)
+            category=DocumentCategoryFactory(is_published=True),
+            language_code='de', is_published=False)
         self.de_doc_no_public_cat = DocumentFactory(
-            document__category=DocumentCategoryFactory(is_published=False),
-            is_published=False)
-#         DocumentFactory(document=self.de_doc)
-#         DocumentFactory(document=self.de_doc_no_public_cat)
-#         DocumentFactory(document=self.en_doc)
+            category=DocumentCategoryFactory(is_published=False),
+            language_code='de', is_published=False)
+        new_doc = self.de_doc.translate('en')
+        new_doc.is_published = True
+        new_doc.save()
+        new_doc = self.en_doc.translate('de')
+        new_doc.is_published = True
+        new_doc.save()
+        new_doc = self.de_doc_no_public_cat.translate('en')
+        new_doc.is_published = True
+        new_doc.save()
 
     def test_manager(self):
         """Testing if the ``DocumentManager`` retrieves the correct objects."""

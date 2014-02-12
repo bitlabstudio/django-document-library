@@ -92,7 +92,6 @@ EXTERNAL_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites',
-    'south',
     'django_nose',
     'djangocms_text_ckeditor',
     'cms',

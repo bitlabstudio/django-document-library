@@ -16,10 +16,7 @@ from document_library.templatetags.document_library_tags import (
     get_files_for_document,
     get_frontpage_documents,
 )
-from document_library.tests.factories import (
-    DocumentTitleDEFactory,
-    DocumentTitleENFactory,
-)
+from document_library.tests.factories import DocumentFactory
 
 
 class GetFilesForDocumentTestCase(TestCase):
@@ -38,9 +35,12 @@ class GetFilesForDocumentTestCase(TestCase):
         self.image = Image.objects.create(
             owner=self.user, original_filename=self.image_name,
             file=self.file_obj)
-        self.doc_en = DocumentTitleENFactory(filer_file=self.image)
-        self.doc_de = DocumentTitleDEFactory(
-            document=self.doc_en.document, filer_file=self.image)
+        self.doc_en = DocumentFactory(
+            documenttranslation__language_code='en',
+            filer_file=self.image)
+        self.doc_de = DocumentFactory(
+            documenttranslation__language_code='en',
+            filer_file=self.image)
 
     def tearDown(self):
         super(GetFilesForDocumentTestCase, self).tearDown()
@@ -49,7 +49,7 @@ class GetFilesForDocumentTestCase(TestCase):
             f.delete()
 
     def test_tag(self):
-        result = get_files_for_document(self.doc_en.document)
+        result = get_files_for_document(self.doc_en)
         self.assertEqual(len(result), 1, msg=(
             'Should return only the english file for the given document'))
 
@@ -61,11 +61,14 @@ class GetFrontpageDocumentsTestCase(TestCase):
     def setUp(self):
         super(GetFrontpageDocumentsTestCase, self).setUp()
         # Two documents that should be on the front page
-        self.en_title = DocumentTitleENFactory(document__is_on_front_page=True)
-        self.de_title = DocumentTitleDEFactory(document__is_on_front_page=True)
+        self.en_doc = DocumentFactory(
+            language_code='en', is_published=True, is_on_front_page=True)
+        self.de_doc = self.en_doc.translate('de')
+        self.de_doc.is_published = True
+        self.de_doc.save()
 
         # And one that should not be on the front page
-        DocumentTitleDEFactory()
+        DocumentFactory()
 
     def test_tag(self):
         req = RequestFactory().get('/')
@@ -74,7 +77,7 @@ class GetFrontpageDocumentsTestCase(TestCase):
         result = get_frontpage_documents(context)
         self.assertEqual(result.count(), 1, msg=(
             'It should only return one document.'))
-        self.assertEqual(result[0], self.en_title.document, msg=(
+        self.assertEqual(result[0], self.en_doc, msg=(
             'Should return the one english document that has'
             ' is_on_fron_page=True'))
 
@@ -83,7 +86,7 @@ class GetFrontpageDocumentsTestCase(TestCase):
         result = get_frontpage_documents(context)
         self.assertEqual(result.count(), 1, msg=(
             'It should only return one document.'))
-        self.assertEqual(result[0], self.de_title.document, msg=(
+        self.assertEqual(result[0], self.de_doc, msg=(
             'Should return the one german document that has'
             ' is_on_fron_page=True'))
 

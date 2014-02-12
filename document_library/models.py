@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from cms.models.fields import PlaceholderField
 from cms.models.pluginmodel import CMSPlugin
-from hvad.models import TranslatedFields, TranslatableModel
+from hvad.models import TranslatedFields, TranslatableModel, TranslationManager
 from filer.fields.file import FilerFileField
 
 
@@ -80,7 +80,7 @@ class DocumentCategory(TranslatableModel):
         return self.safe_translation_getter('title', self.slug)
 
 
-class DocumentManager(models.Manager):
+class DocumentManager(TranslationManager):
     """Custom manager for the ``Document`` model."""
     def published(self, request):
         """
@@ -95,8 +95,8 @@ class DocumentManager(models.Manager):
 
         qs = self.get_query_set()
         qs = qs.filter(
-            documenttitle__is_published=True,
-            documenttitle__language=language,
+            translations__is_published=True,
+            translations__language_code=language,
         )
         # either it has no category or the one it has is published
         qs = qs.filter(
@@ -233,9 +233,7 @@ class Document(TranslatableModel):
         ),
     )
 
-    # TODO update document manager to be subclass of hvad translation aware
-    # manager
-#     objects = DocumentManager()
+    objects = DocumentManager()
 
     class Meta:
         ordering = ('position', '-creation_date', )
