@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from mock import Mock
 
-from django.contrib.webdesign.lorem_ipsum import paragraphs
 from django.test import TestCase
 
 from ..models import Document, DocumentPlugin
@@ -12,9 +11,6 @@ from .factories import (
     AttachmentFactory,
     DocumentFactory,
     DocumentCategoryFactory,
-    DocumentCategoryTitleENFactory,
-    DocumentTitleDEFactory,
-    DocumentTitleENFactory,
 )
 
 
@@ -38,18 +34,10 @@ class DocumentTestCase(TestCase):
             'Should be able to instantiate and save the object.'))
 
     def test_get_filetype(self):
-        title = DocumentTitleENFactory()
-        instance = title.document
+        instance = DocumentFactory()
         result = instance.get_filetype()
         self.assertEqual(result, None, msg=(
             'Should return the translated filetype.'))
-
-    def test_get_title(self):
-        title = DocumentTitleENFactory()
-        instance = title.document
-        result = instance.get_title()
-        self.assertEqual(result, 'A title', msg=(
-            'Should return the translated title.'))
 
 
 class DocumentCategoryTestCase(TestCase):
@@ -62,21 +50,10 @@ class DocumentCategoryTestCase(TestCase):
             'Should be able to instantiate and save the object.'))
 
     def test_get_title(self):
-        title = DocumentCategoryTitleENFactory()
-        instance = title.category
+        instance = DocumentFactory()
         result = instance.get_title()
         self.assertEqual(result, 'A title', msg=(
             'Should return the translated title.'))
-
-
-class DocumentCategoryTitleTestCase(TestCase):
-    """Tests for the ``DocumentCategoryTitle`` model."""
-    longMessage = True
-
-    def test_model(self):
-        instance = DocumentCategoryTitleENFactory()
-        self.assertTrue(instance.pk, msg=(
-            'Should be able to instantiate and save the object.'))
 
 
 class DocumentManagerTestCase(TestCase):
@@ -84,18 +61,19 @@ class DocumentManagerTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        self.en_title = DocumentTitleENFactory(
+        # TODO make this test work again with the new factories
+        self.en_doc = DocumentFactory(
             document__category=DocumentCategoryFactory(is_published=True),
             is_published=False)
-        self.de_title = DocumentTitleDEFactory(
+        self.de_doc = DocumentFactory(
             document__category=DocumentCategoryFactory(is_published=True),
             is_published=False)
-        self.de_title_no_public_cat = DocumentTitleDEFactory(
+        self.de_doc_no_public_cat = DocumentFactory(
             document__category=DocumentCategoryFactory(is_published=False),
             is_published=False)
-        DocumentTitleENFactory(document=self.de_title.document)
-        DocumentTitleENFactory(document=self.de_title_no_public_cat.document)
-        DocumentTitleDEFactory(document=self.en_title.document)
+#         DocumentFactory(document=self.de_doc)
+#         DocumentFactory(document=self.de_doc_no_public_cat)
+#         DocumentFactory(document=self.en_doc)
 
     def test_manager(self):
         """Testing if the ``DocumentManager`` retrieves the correct objects."""
@@ -125,26 +103,3 @@ class DocumentPluginTestCase(TestCase):
         instance.save()
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
-
-
-class DocumentTitleTestCase(TestCase):
-    """Tests for the ``DocumentTitle`` model."""
-    longMessage = True
-
-    def test_model(self):
-        instance = DocumentTitleENFactory()
-        self.assertTrue(instance.pk, msg=(
-            'Should be able to instantiate and save the object.'))
-
-    def test_get_meta_description(self):
-        title = DocumentTitleDEFactory(description='ä "description"')
-        self.assertEqual(title.get_meta_description(),
-                         title.description.replace('"', '&quot;'))
-
-        title.description = paragraphs(1)[0]
-        self.assertEqual(title.get_meta_description(),
-                         paragraphs(1)[0][:160]+'...')
-
-        title.meta_description = paragraphs(1)[0]
-        self.assertEqual(title.get_meta_description(),
-                         paragraphs(1)[0])

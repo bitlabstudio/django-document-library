@@ -93,6 +93,7 @@ EXTERNAL_APPS = [
     'django.contrib.sites',
     'django_nose',
     'cms',
+    'cms.plugins.text',
     'sekizai',
     'menus',
     'filer',
@@ -100,6 +101,8 @@ EXTERNAL_APPS = [
     'easy_thumbnails',
     'cmsplugin_blog',
     'simple_translation',
+    'tagging',
+    'hvad',
 ]
 
 INTERNAL_APPS = [
