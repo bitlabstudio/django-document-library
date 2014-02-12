@@ -1,0 +1,9 @@
+<h2>{{ document.title }}</h2>
+<p>{{ document.description }}</p>
+{% if document.download_url %}
+    <p><a href="{{ document.download_url }}">{{ document.download_url }}</a></p>
+{% elif document.thumbnail %}
+    <p><a href="{{ document.filer_file.url }}"><img src="{{ document.thumbnail.url }}" alt="{{ document.filer_file.original_file_name }}"></a></p>
+{% else %}
+    <p><a href="{{ document.filer_file.url }}">{{ document.filer_file.name|default:document.filer_file.original_filename }}</a></p>
+{% endif %}
