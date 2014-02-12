@@ -5,7 +5,6 @@ from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
 from cms.admin.placeholderadmin import PlaceholderAdmin
-from cmsplugin_blog.admin import M2MPlaceholderAdmin
 from django_libs.admin import MultilingualPublishMixin
 from hvad.admin import TranslatableAdmin
 from simple_translation.admin import TranslationAdmin
