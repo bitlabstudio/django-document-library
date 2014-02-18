@@ -5,31 +5,9 @@ from south.db import db
 from south.v2 import DataMigration
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.utils import ProgrammingError
 
 class Migration(DataMigration):
-
-    def migrate_placeholder(self, orm, document, old_slot, new_slot, new_field):
-        placeholder = None
-        try:
-            placeholder_m2m_object = document.placeholders.through.objects.get(
-                document=document, placeholder__slot=old_slot)
-            placeholder = placeholder_m2m_object.placeholder
-        except ObjectDoesNotExist:
-            pass
-
-        if placeholder:
-            placeholder_cls = orm['cms.Placeholder']
-            new_placeholder = placeholder_cls.objects.create(slot=new_slot)
-            for plugin in placeholder.get_plugins():
-                plugin.placeholder_id = new_placeholder.pk
-                plugin.save()
-            setattr(document, new_field, new_placeholder)
-            document.save()
-            try:
-                placeholder_m2m_object.delete()
-                placeholder.delete()
-            except ObjectDoesNotExist:
-                pass
 
     def forwards(self, orm):
         "Write your forwards methods here."
@@ -42,8 +20,6 @@ class Migration(DataMigration):
                 )
 
         for document in orm['document_library.Document'].objects.all():
-            self.migrate_placeholder(
-                orm, document, 'content', 'document_library_content', 'content')
             for trans_old in orm['document_library.DocumentTitle'].objects.filter(document=document):
                 orm['document_library.DocumentTranslation'].objects.create(
                     master=document,
