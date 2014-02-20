@@ -14,11 +14,6 @@ class Migration(DataMigration):
         ('cms', '0058_placeholderref_table_rename'),
     )
 
-    needed_by = (
-        ('multilingual_events', '0038_migrate_placeholders'),
-        ('good_practice_examples', '0005_migrate_placeholder'),
-    )
-
     def migrate_placeholder(self, orm, document, old_slot, new_slot, new_field):
         placeholder = None
         try:
