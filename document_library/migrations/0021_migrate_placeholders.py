@@ -11,7 +11,7 @@ from django.db.utils import ProgrammingError
 class Migration(DataMigration):
 
     depends_on = (
-        ('cms', '0058_placeholderref_table_rename'),
+        ('cms', '0060_auto__add_field_page_xframe_options'),
     )
 
     def migrate_placeholder(self, orm, document, old_slot, new_slot, new_field):
