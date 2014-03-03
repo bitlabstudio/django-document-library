@@ -10,16 +10,15 @@ register = template.Library()
 @register.assignment_tag
 def get_files_for_document(document):
     """
-    Returns all available files for the given document in the current language.
+    Returns all available files for the given document in the all languages.
 
     """
-#     lang = get_language()
-#     if '-' in lang:
-#         lang = lang.split('-')[0]
-#     titles = Document.objects.filter(
-#         document=document, filer_file__isnull=False, language=lang)
-#     files = [title.filer_file for title in titles]
-    return [document.filer_file]
+    files = []
+    for doc_trans in document.translations.all():
+        if doc_trans.filer_file is not None and \
+                doc_trans.filer_file not in files:
+            files.append(doc_trans.filer_file)
+    return files
 
 
 @register.assignment_tag(takes_context=True)
