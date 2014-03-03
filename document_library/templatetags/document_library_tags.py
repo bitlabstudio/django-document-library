@@ -10,7 +10,10 @@ register = template.Library()
 @register.assignment_tag
 def get_files_for_document(document):
     """
-    Returns all available files for the given document in the all languages.
+    Returns the available files for all languages.
+
+    In case the file is already present in another language, it does not re-add
+    it again.
 
     """
     files = []
