@@ -9,6 +9,12 @@ def read(fname):
     except IOError:
         return ''
 
+dependency_links = [
+    'https://github.com/divio/django-cms/tarball/3a09d5c39b3469e64aeecc0205a193f5b70c2061',  # NOQA
+    # needs this dev version for django 1.6 fixes
+    'https://github.com/KristianOellegaard/django-hvad/tarball/0e2101f15404eaf9611cd6cf843bfc424117b227',  # NOQA
+]
+
 
 setup(
     name="django-document-library",
@@ -24,8 +30,10 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'django-libs>=1.13',
+        'django',
+        'django-libs',
     ],
+    dependency_links=dependency_links,
     tests_require=[
         'fabric',
         'factory_boy',

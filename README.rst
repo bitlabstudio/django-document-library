@@ -1,8 +1,6 @@
 Django Document Library
 =======================
 
-EARLY ALPHA! DO NOT USE THIS!
-
 A Django application to manage multilingual documents and display them on your
 site in a downloads section.
 
