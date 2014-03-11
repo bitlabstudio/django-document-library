@@ -1,5 +1,10 @@
 === ongoing ===
 
+
+=== 1.0 ===
+
+- updated to django-hvad
+
 === 0.9.3 ===
 
 - Improved admins
