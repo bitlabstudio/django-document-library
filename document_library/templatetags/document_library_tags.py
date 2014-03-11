@@ -1,8 +1,7 @@
 """Templatetags for the ``document_library`` app."""
 from django import template
-from django.utils.translation import get_language
 
-from document_library.models import Document, DocumentTitle
+from document_library.models import Document
 
 
 register = template.Library()
@@ -11,15 +10,18 @@ register = template.Library()
 @register.assignment_tag
 def get_files_for_document(document):
     """
-    Returns all available files for the given document in the current language.
+    Returns the available files for all languages.
+
+    In case the file is already present in another language, it does not re-add
+    it again.
 
     """
-    lang = get_language()
-    if '-' in lang:
-        lang = lang.split('-')[0]
-    titles = DocumentTitle.objects.filter(
-        document=document, filer_file__isnull=False, language=lang)
-    files = [title.filer_file for title in titles]
+    files = []
+    for doc_trans in document.translations.all():
+        if doc_trans.filer_file is not None and \
+                doc_trans.filer_file not in files:
+            doc_trans.filer_file.language = doc_trans.language_code
+            files.append(doc_trans.filer_file)
     return files
 
 

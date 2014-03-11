@@ -1,16 +1,12 @@
-{% load simple_translation_tags document_library_tags %}
-{% load url form future %}
+{% load document_library_tags %}
 {% for document in object_list %}
-    {% with document|get_preferred_translation_from_request:request as document_title %}
-    <h2><a href="{{ document.get_absolute_url }}">{{ document_title.title }}</a></h2>
-    <p>{{ document_title.description }}</p>
-    {% endwith %}
+    <h2><a href="{{ document.get_absolute_url }}">{{ document.title }}</a></h2>
+    <p>{{ document.description }}</p>
     {% if document.download_url %}
         <p><a href="{{ document.download_url }}">{{ document.download_url }}</a></p>
+    {% elif document.thumbnail %}
+        <p><a href="{{ document.filer_file.url }}"><img src="{{ document.thumbnail.url }}" alt="{{ document.filer_file.original_file_name }}"></a></p>
     {% else %}
-        {% get_files_for_document document as files %}
-        {% for file in files %}
-            <p><a href="{{ file.url }}">{{ file.name|default:file.original_filename }}</a></p>
-        {% endfor %}
+        <p><a href="{{ document.filer_file.url }}">{{ document.filer_file.name|default:document.filer_file.original_filename }}</a></p>
     {% endif %}
 {% endfor %}

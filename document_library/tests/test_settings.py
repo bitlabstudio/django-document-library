@@ -22,6 +22,10 @@ LANGUAGES = (
     ('de', 'German'),
 )
 
+JQUERY_UI_CSS = ''
+JQUERY_UI_JS = ''
+JQUERY_JS = ''
+
 ROOT_URLCONF = 'document_library.tests.urls'
 
 STATIC_URL = '/static/'
@@ -46,18 +50,19 @@ COVERAGE_MODULE_EXCLUDES = [
     'migrations', 'fixtures', 'admin$', 'django_extensions',
 ]
 
-MIDDLEWARE_CLASSES = [
-    'django.middleware.common.CommonMiddleware',
+MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'cms.middleware.multilingual.MultilingualURLMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.doc.XViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
-    'simple_translation.middleware.MultilingualGenericsMiddleware',
-]
+    'cms.middleware.language.LanguageCookieMiddleware',
+)
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
@@ -88,13 +93,14 @@ EXTERNAL_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django_nose',
+    'djangocms_text_ckeditor',
     'cms',
+    'mptt',
     'sekizai',
     'menus',
     'filer',
-    'mptt',
     'easy_thumbnails',
-    'simple_translation',
+    'hvad',
 ]
 
 INTERNAL_APPS = [
@@ -114,3 +120,5 @@ CMS_FRONTEND_LANGUAGES = ('en', 'de', )
 CMS_TEMPLATES = (
     ('standard.html', 'Standard'),
 )
+
+SECRET_KEY = 'foobar'

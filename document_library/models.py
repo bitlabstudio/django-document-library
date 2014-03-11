@@ -1,20 +1,16 @@
 """Models for the ``document_library`` app."""
 from __future__ import unicode_literals
 
-from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 
+from cms.models.fields import PlaceholderField
 from cms.models.pluginmodel import CMSPlugin
-from django_libs.models_mixins import SimpleTranslationMixin
-from djangocms_utils.fields import M2MPlaceholderField
+from hvad.models import TranslatedFields, TranslatableModel, TranslationManager
 from filer.fields.file import FilerFileField
-from simple_translation.actions import SimpleTranslationPlaceholderActions
-from simple_translation.utils import get_preferred_translation_from_lang
 
 
 class Attachment(models.Model):
@@ -43,15 +39,16 @@ class Attachment(models.Model):
         ordering = ['position', ]
 
 
-class DocumentCategory(SimpleTranslationMixin, models.Model):
+class DocumentCategory(TranslatableModel):
     """
     Documents can be grouped in categories.
-
-    See ``DocumentCategoryTitle`` for translateable fields.
 
     :creation_date: The DateTime when this category was created.
     :slug: The slug of this category. E.g. used for filtering.
     :is_published: If the category should be visible to the public.
+
+    translated:
+    :title: The title of this category.
 
     """
     creation_date = models.DateTimeField(
@@ -69,35 +66,21 @@ class DocumentCategory(SimpleTranslationMixin, models.Model):
         default=False,
     )
 
+    translations = TranslatedFields(
+        title=models.CharField(
+            max_length=256,
+            verbose_name=_('Title'),
+        )
+    )
+
     def __unicode__(self):
         return self.get_title()
 
     def get_title(self):
-        lang = get_language()
-        return get_preferred_translation_from_lang(self, lang).title
+        return self.safe_translation_getter('title', self.slug)
 
 
-class DocumentCategoryTitle(models.Model):
-    """
-    Translateable fields for the ``DocumentCategory`` model.
-
-    :title: The title of this category.
-
-    """
-    title = models.CharField(
-        max_length=256,
-        verbose_name=_('Title'),
-    )
-
-    # Needed by simple-translation
-    category = models.ForeignKey(
-        DocumentCategory, verbose_name=_('Category'))
-
-    language = models.CharField(
-        max_length=2, verbose_name=_('Language'), choices=settings.LANGUAGES)
-
-
-class DocumentManager(models.Manager):
+class DocumentManager(TranslationManager):
     """Custom manager for the ``Document`` model."""
     def published(self, request):
         """
@@ -112,8 +95,8 @@ class DocumentManager(models.Manager):
 
         qs = self.get_query_set()
         qs = qs.filter(
-            documenttitle__is_published=True,
-            documenttitle__language=language,
+            translations__is_published=True,
+            translations__language_code=language,
         )
         # either it has no category or the one it has is published
         qs = qs.filter(
@@ -130,11 +113,9 @@ class DocumentPlugin(CMSPlugin):
     )
 
 
-class Document(SimpleTranslationMixin, models.Model):
+class Document(TranslatableModel):
     """
     A document consists of a title and description and a number of filer-files.
-
-    See ``DocumentTitle`` for the translateable fields of this model.
 
     :creation_date: DateTime when this Document object was created.
     :user: Optional FK to the User who created this document.
@@ -145,6 +126,14 @@ class Document(SimpleTranslationMixin, models.Model):
       ``get_frontpage_documents`` templatetag.
     :document_date: The date of the document itself. Don't confuse this with
       creation_date.
+
+    translated:
+    :title: The title of the document.
+    :description: A short description of the document.
+    :filer_file: FK to the File of the document version for this language.
+    :thumbnail: A thumbnail for the document.
+    :is_published: If ``False`` this language will be excluded from the library
+    :meta_description: The meta description to display for the detail page.
 
     """
     category = models.ForeignKey(
@@ -189,9 +178,9 @@ class Document(SimpleTranslationMixin, models.Model):
         blank=True,
     )
 
-    placeholders = M2MPlaceholderField(
-        actions=SimpleTranslationPlaceholderActions(),
-        placeholders=('content', ),
+    content = PlaceholderField(
+        'document_library_content',
+        related_name='documents',
     )
 
     creation_date = models.DateTimeField(
@@ -209,6 +198,41 @@ class Document(SimpleTranslationMixin, models.Model):
         blank=True, null=True,
     )
 
+    translations = TranslatedFields(
+        title=models.CharField(
+            max_length=512,
+            verbose_name=_('Title'),
+        ),
+        description=models.TextField(
+            verbose_name=_('Short description'),
+            blank=True,
+        ),
+        filer_file=FilerFileField(
+            verbose_name=_('File'),
+            related_name='document_files',
+            null=True, blank=True,
+        ),
+        thumbnail=FilerFileField(
+            verbose_name=_('Thumbnail'),
+            related_name='document_thumbnails',
+            null=True, blank=True,
+        ),
+        copyright_notice=models.CharField(
+            max_length=1024,
+            verbose_name=_('Copyright notice'),
+            blank=True,
+        ),
+        is_published=models.BooleanField(
+            verbose_name=_('Is published'),
+            default=False,
+        ),
+        meta_description=models.TextField(
+            max_length=512,
+            verbose_name=_('Meta description'),
+            blank=True,
+        ),
+    )
+
     objects = DocumentManager()
 
     class Meta:
@@ -222,79 +246,10 @@ class Document(SimpleTranslationMixin, models.Model):
             'pk': self.pk, })
 
     def get_filetype(self):
-        lang = get_language()
-        title = get_preferred_translation_from_lang(self, lang)
-        if title.filer_file:
-            return title.filer_file.extension.upper()
+        if self.filer_file:
+            return self.filer_file.extension.upper()
         return None
 
     def get_title(self):
-        lang = get_language()
-        return get_preferred_translation_from_lang(self, lang).title
-
-
-class DocumentTitle(models.Model):
-    """
-    The translateable fields of the ``Document`` model.
-
-    :title: The title of the document.
-    :description: A short description of the document.
-    :filer_file: FK to the File of the document version for this language.
-    :thumbnail: A thumbnail for the document.
-    :is_published: If ``False`` the object will be excluded from the library
-    :meta_description: The meta description to display for the detail page.
-
-    """
-    title = models.CharField(
-        max_length=512,
-        verbose_name=_('Title'),
-    )
-
-    description = models.TextField(
-        verbose_name=_('Short description'),
-        blank=True,
-    )
-
-    filer_file = FilerFileField(
-        verbose_name=_('File'),
-        related_name='document_files',
-        null=True, blank=True,
-    )
-
-    thumbnail = FilerFileField(
-        verbose_name=_('Thumbnail'),
-        related_name='document_thumbnails',
-        null=True, blank=True,
-    )
-
-    copyright_notice = models.CharField(
-        max_length=1024,
-        verbose_name=_('Copyright notice'),
-        blank=True,
-    )
-
-    is_published = models.BooleanField(
-        verbose_name=_('Is published'),
-        default=False,
-    )
-
-    meta_description = models.TextField(
-        max_length=512,
-        verbose_name=_('Meta description'),
-        blank=True,
-    )
-
-    # Needed by simple-translation
-    document = models.ForeignKey(
-        Document, verbose_name=_('Document'))
-
-    language = models.CharField(
-        max_length=5, verbose_name=('Language'), choices=settings.LANGUAGES)
-
-    def get_meta_description(self):
-        if self.meta_description:
-            return self.meta_description
-        if len(self.description) > 160:
-            desc = self.description.replace('"', '&quot;')
-            return '{}...'.format(desc[:160])
-        return self.description.replace('"', '&quot;')
+        # Kept for backwards compatibility
+        return self.title
