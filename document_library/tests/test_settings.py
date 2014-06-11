@@ -96,6 +96,7 @@ EXTERNAL_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites',
+    'django_libs',
     'django_nose',
     'djangocms_text_ckeditor',
     'cms',
@@ -122,7 +123,11 @@ CMS_SEO_FIELDS = True
 CMS_MENU_TITLE_OVERWRITE = True
 CMS_FRONTEND_LANGUAGES = ('en', 'de', )
 CMS_TEMPLATES = (
-    ('standard.html', 'Standard'),
+    ('base.html', 'Standard'),
 )
 
 SECRET_KEY = 'foobar'
+
+SOUTH_MIGRATION_MODULES = {
+    'easy_thumbnails': 'easy_thumbnails.south_migrations',
+}

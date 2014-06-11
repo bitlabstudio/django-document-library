@@ -44,7 +44,6 @@ class DocumentTestCase(TestCase):
             'Should return the translated filetype.'))
 
 
-
 class DocumentCategoryTestCase(TestCase):
     """Tests for the ``DocumentCategory`` model."""
     longMessage = True

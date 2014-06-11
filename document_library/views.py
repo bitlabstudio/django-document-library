@@ -1,25 +1,30 @@
 """Views for the ``document_library`` app."""
+from datetime import date
+
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 
+from dateutil import relativedelta
 from django_libs.utils import conditional_decorator
 
 from .models import Document, DocumentCategory
 from . import settings
 
 
-class DocumentListView(ListView):
-    """A view that lists all documents for the current language."""
-    model = Document
+class DocumentListMixin(object):
+    """Mixin to provide document list functions."""
+    paginate_by = 1
 
     @conditional_decorator(
         method_decorator(login_required), settings.LOGIN_REQUIRED)
     def dispatch(self, request, *args, **kwargs):
-        return super(DocumentListView, self).dispatch(request, *args, **kwargs)
+        return super(DocumentListMixin, self).dispatch(
+            request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        ctx = super(DocumentListView, self).get_context_data(**kwargs)
+        ctx = super(DocumentListMixin, self).get_context_data(**kwargs)
         ctx.update({
             'categories': DocumentCategory.objects.all(),
         })
@@ -27,6 +32,11 @@ class DocumentListView(ListView):
 
     def get_queryset(self):
         return Document.objects.published(self.request)
+
+
+class DocumentListView(DocumentListMixin, ListView):
+    """A view that lists all documents for the current language."""
+    pass
 
 
 class DocumentDetailView(DetailView):
@@ -38,3 +48,40 @@ class DocumentDetailView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         return super(DocumentDetailView, self).dispatch(
             request, *args, **kwargs)
+
+
+class DocumentMonthView(DocumentListMixin, ListView):
+    """A view that lists a month's documents for the current language."""
+    template_name = 'document_library/document_month.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.month = date(
+                int(kwargs.get('year')), int(kwargs.get('month')), 1)
+        except ValueError:
+            raise Http404
+        return super(DocumentMonthView, self).dispatch(
+            request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(DocumentMonthView, self).get_context_data(**kwargs)
+        last_month = \
+            self.month - relativedelta.relativedelta(months=1)
+        next_month = \
+            self.month + relativedelta.relativedelta(months=1)
+        if next_month > date.today():
+            next_month = None
+
+        ctx.update({
+            'month': self.month,
+            'last_month': last_month,
+            'next_month': next_month,
+        })
+        return ctx
+
+    def get_queryset(self):
+        qs = super(DocumentMonthView, self).get_queryset()
+        return qs.filter(
+            document_date__year=self.month.year,
+            document_date__month=self.month.month,
+        )

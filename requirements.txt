@@ -10,6 +10,7 @@ django_libs==1.54
 # django-hvad==0.3
 Pillow==1.7.8
 South==0.8.4
+python-dateutil==2.2
 
 -e git+https://github.com/divio/django-cms.git@8327844ff84df60e36c9ef1a8f2e63d740519a51#egg=cms
 django-filer==0.9.5

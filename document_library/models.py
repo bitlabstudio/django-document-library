@@ -11,6 +11,7 @@ from cms.models.fields import PlaceholderField
 from cms.models.pluginmodel import CMSPlugin
 from hvad.models import TranslatedFields, TranslatableModel, TranslationManager
 from filer.fields.file import FilerFileField
+from filer.fields.image import FilerImageField
 
 
 class Attachment(models.Model):
@@ -126,6 +127,7 @@ class Document(TranslatableModel):
       ``get_frontpage_documents`` templatetag.
     :document_date: The date of the document itself. Don't confuse this with
       creation_date.
+    :image: Document image. E.g. scan, cover.
 
     translated:
     :title: The title of the document.
@@ -183,11 +185,6 @@ class Document(TranslatableModel):
         related_name='documents',
     )
 
-    creation_date = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name=_('Creation date'),
-    )
-
     update_date = models.DateTimeField(
         auto_now=True,
         verbose_name=_('Update date'),
@@ -196,6 +193,12 @@ class Document(TranslatableModel):
     document_date = models.DateTimeField(
         verbose_name=_('Document date'),
         blank=True, null=True,
+    )
+
+    image = FilerImageField(
+        verbose_name=_('Image'),
+        related_name='document_images',
+        null=True, blank=True,
     )
 
     translations = TranslatedFields(

@@ -31,6 +31,7 @@ setup(
     install_requires=[
         'django',
         'django-libs',
+        'python-dateutil',
     ],
     dependency_links=dependency_links,
     tests_require=[
