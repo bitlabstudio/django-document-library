@@ -70,7 +70,7 @@ frontpage::
     {% load document_library_tags %}
     {% get_frontpage_documents as documents %}
     <ul>
-        {for document in documents %}
+        {% for document in documents %}
             <li><a href="/url/to/library/">{{ document.get_title }}</a></li>
         {% endfor %}
     </ul>
