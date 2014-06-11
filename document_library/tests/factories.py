@@ -9,12 +9,12 @@ from document_library.models import (
 from document_library.tests.test_app.models import DummyModel
 
 
-class DummyModelFactory(factory.Factory):
+class DummyModelFactory(factory.DjangoModelFactory):
     """Factory for the ``DummyModel`` model."""
     FACTORY_FOR = DummyModel
 
 
-class DocumentCategoryFactory(factory.Factory):
+class DocumentCategoryFactory(factory.DjangoModelFactory):
     """Factory for the ``DocumentCategory`` model."""
     FACTORY_FOR = DocumentCategory
 
@@ -23,7 +23,7 @@ class DocumentCategoryFactory(factory.Factory):
     title = factory.Sequence(lambda n: 'title {0}'.format(n))
 
 
-class DocumentFactory(factory.Factory):
+class DocumentFactory(factory.DjangoModelFactory):
     """Factory for the ``Document`` model."""
     FACTORY_FOR = Document
 
@@ -31,7 +31,7 @@ class DocumentFactory(factory.Factory):
     title = factory.Sequence(lambda n: 'title {0}'.format(n))
 
 
-class AttachmentFactory(factory.Factory):
+class AttachmentFactory(factory.DjangoModelFactory):
     """Factory for the ``EntryAttachment`` model."""
     FACTORY_FOR = Attachment
 

@@ -1,5 +1,9 @@
 """Settings that need to be set in order to run the tests."""
+import logging
 import os
+
+
+logging.getLogger('factory').setLevel(logging.WARN)
 
 DEBUG = True
 FILER_DEBUG = True
@@ -77,7 +81,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.colorspace',
     'easy_thumbnails.processors.autocrop',
-    #'easy_thumbnails.processors.scale_and_crop',
+    # 'easy_thumbnails.processors.scale_and_crop',
     'filer.thumbnail_processors.scale_and_crop_with_subject_location',
     'easy_thumbnails.processors.filters',
 )
