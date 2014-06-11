@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Fixed language getter in manager
+
 === 1.1 ===
 
 - Added new image fields

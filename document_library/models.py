@@ -5,7 +5,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import get_language, ugettext_lazy as _
 
 from cms.models.fields import PlaceholderField
 from cms.models.pluginmodel import CMSPlugin
@@ -90,7 +90,7 @@ class DocumentManager(TranslationManager):
         :param request: A Request instance.
 
         """
-        language = getattr(request, 'LANGUAGE_CODE', None)
+        language = getattr(request, 'LANGUAGE_CODE', get_language())
         if not language:
             return self.model.objects.none()
 

@@ -89,9 +89,3 @@ class GetFrontpageDocumentsTestCase(TestCase):
         self.assertEqual(result[0], self.de_doc, msg=(
             'Should return the one german document that has'
             ' is_on_fron_page=True'))
-
-        req = RequestFactory().get('/')
-        context = RequestContext(req)
-        result = get_frontpage_documents(context)
-        self.assertEqual(result.count(), 0, msg=(
-            'It should return no documents, if no language is set.'))

@@ -1,5 +1,5 @@
 """Views for the ``document_library`` app."""
-from datetime import date, datetime
+from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.db import connection, models
@@ -38,8 +38,6 @@ class DocumentListMixin(object):
             'month': truncate_date})
         self.months = qs.values('month').annotate(
             models.Count('pk')).order_by('-month')
-        for month in self.months:
-            month['month'] = datetime.strptime(month['month'], '%Y-%m-%d')
         return qs
 
 
