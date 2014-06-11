@@ -1,6 +1,9 @@
 """Factories for the ``document_library`` app."""
 import factory
 
+from django.utils.timezone import now
+
+from dateutil.relativedelta import relativedelta
 from filer.models.filemodels import File
 
 from document_library.models import (
@@ -31,6 +34,8 @@ class DocumentFactory(factory.DjangoModelFactory):
 
     is_published = True
     title = factory.Sequence(lambda n: 'title {0}'.format(n))
+    document_date = factory.Sequence(lambda n: now() - relativedelta(days=1))
+    category = factory.SubFactory(DocumentCategoryFactory)
 
 
 class AttachmentFactory(factory.DjangoModelFactory):

@@ -1,3 +1,10 @@
+<ul>
+    {% for month in months %}
+        <li>
+            <a href="">{{ month.month|date:"Y-m" }} ({{ month.pk__count }})</a>
+        </li>
+    {% endfor %}
+</ul>
 {% for document in object_list %}
     <h2><a href="{{ document.get_absolute_url }}">{{ document.title }}</a></h2>
     <p>{{ document.description }}</p>

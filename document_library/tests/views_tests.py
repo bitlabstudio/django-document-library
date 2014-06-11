@@ -1,6 +1,7 @@
 """Tests for the views of the ``document_library`` app."""
 from django.test import TestCase, RequestFactory
 from django.utils.timezone import now
+from django.utils.translation import get_language
 
 from django_libs.tests.mixins import ViewRequestFactoryTestMixin
 
@@ -11,7 +12,9 @@ from .. import views
 class DocumentListViewTestCase(TestCase):
     """Tests for the ``DocumentListView`` view."""
     def test_view(self):
+        doc = DocumentFactory()
         req = RequestFactory().get('/')
+        req.LANGUAGE_CODE = get_language()
         resp = views.DocumentListView.as_view()(req)
         self.assertEqual(resp.status_code, 200)
 
@@ -28,7 +31,7 @@ class DocumentDetailViewTestCase(TestCase):
 class DocumentMonthViewTestCase(ViewRequestFactoryTestMixin, TestCase):
     """Tests for the ``DocumentMonthView`` view."""
     def setUp(self):
-        self.document = DocumentFactory(document_date=now())
+        self.document = DocumentFactory()
         self.view_class = views.DocumentMonthView
 
     def get_view_kwargs(self):

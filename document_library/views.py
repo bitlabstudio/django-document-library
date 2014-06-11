@@ -1,7 +1,8 @@
 """Views for the ``document_library`` app."""
-from datetime import date
+from datetime import date, datetime
 
 from django.contrib.auth.decorators import login_required
+from django.db import connection, models
 from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
@@ -27,11 +28,19 @@ class DocumentListMixin(object):
         ctx = super(DocumentListMixin, self).get_context_data(**kwargs)
         ctx.update({
             'categories': DocumentCategory.objects.all(),
+            'months': self.months,
         })
         return ctx
 
     def get_queryset(self):
-        return Document.objects.published(self.request)
+        truncate_date = connection.ops.date_trunc_sql('month', 'document_date')
+        qs = Document.objects.published(self.request).extra({
+            'month': truncate_date})
+        self.months = qs.values('month').annotate(
+            models.Count('pk')).order_by('-month')
+        for month in self.months:
+            month['month'] = datetime.strptime(month['month'], '%Y-%m-%d')
+        return qs
 
 
 class DocumentListView(DocumentListMixin, ListView):
@@ -65,10 +74,8 @@ class DocumentMonthView(DocumentListMixin, ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super(DocumentMonthView, self).get_context_data(**kwargs)
-        last_month = \
-            self.month - relativedelta.relativedelta(months=1)
-        next_month = \
-            self.month + relativedelta.relativedelta(months=1)
+        last_month = self.month - relativedelta.relativedelta(months=1)
+        next_month = self.month + relativedelta.relativedelta(months=1)
         if next_month > date.today():
             next_month = None
 
