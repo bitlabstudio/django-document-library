@@ -11,6 +11,7 @@ from .factories import (
     AttachmentFactory,
     DocumentFactory,
     DocumentCategoryFactory,
+    FileFactory,
 )
 
 
@@ -35,9 +36,13 @@ class DocumentTestCase(TestCase):
 
     def test_get_filetype(self):
         instance = DocumentFactory()
-        result = instance.get_filetype()
-        self.assertEqual(result, None, msg=(
+        self.assertEqual(instance.get_filetype(), None, msg=(
             'Should return the translated filetype.'))
+
+        instance.filer_file = FileFactory()
+        self.assertEqual(instance.get_filetype(), '', msg=(
+            'Should return the translated filetype.'))
+
 
 
 class DocumentCategoryTestCase(TestCase):

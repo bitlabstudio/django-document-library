@@ -1,6 +1,8 @@
 """Factories for the ``document_library`` app."""
 import factory
 
+from filer.models.filemodels import File
+
 from document_library.models import (
     Attachment,
     Document,
@@ -37,3 +39,10 @@ class AttachmentFactory(factory.DjangoModelFactory):
 
     content_object = factory.SubFactory(DummyModelFactory)
     document = factory.SubFactory(DocumentFactory)
+
+
+class FileFactory(factory.DjangoModelFactory):
+    """Factory for the ``File`` model."""
+    FACTORY_FOR = File
+
+    file = factory.Sequence(lambda n: 'file_{0}'.format(n))
