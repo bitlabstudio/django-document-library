@@ -1,7 +1,8 @@
+{% load tz %}
 <ul>
     {% for month in months %}
         <li>
-            <a href="">{{ month.month|date:"Y-m" }} ({{ month.pk__count }})</a>
+            <a href="">{{ month.month|utc|date:"Y-m" }} ({{ month.pk__count }})</a>
         </li>
     {% endfor %}
 </ul>
