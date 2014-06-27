@@ -87,6 +87,14 @@ Default: ``False``
 Set this to ``True`` if you wand to require login for the views of this app.
 
 
+DOCUMENT_LIBRARY_PAGINATION_AMOUNT
+++++++++++++++++++++++++++++++++++
+
+Default: 1
+
+Amount of documents display on one page.
+
+
 
 Contribute
 ----------

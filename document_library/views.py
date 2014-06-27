@@ -16,7 +16,7 @@ from . import settings
 
 class DocumentListMixin(object):
     """Mixin to provide document list functions."""
-    paginate_by = 1
+    paginate_by = settings.PAGINATION_AMOUNT
 
     @conditional_decorator(
         method_decorator(login_required), settings.LOGIN_REQUIRED)

@@ -5,6 +5,8 @@ import os
 
 logging.getLogger('factory').setLevel(logging.WARN)
 
+DOCUMENT_LIBRARY_PAGINATION_AMOUNT = 2
+
 DEBUG = True
 FILER_DEBUG = True
 

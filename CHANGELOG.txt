@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Added DOCUMENT_LIBRARY_PAGINATION_AMOUNT setting
+
 === 1.1.1 ===
 
 - Fixed language getter in manager
