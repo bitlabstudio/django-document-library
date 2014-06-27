@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 1.2 ===
+
 - Added DOCUMENT_LIBRARY_PAGINATION_AMOUNT setting
 - Added utc template tag to month list, since timezones caused problems
 
