@@ -95,6 +95,21 @@ Default: 1
 Amount of documents display on one page.
 
 
+Sitemaps
+++++++++
+
+To add a sitemap of your documents, add the following to your urlconf: ::
+
+    from document_library.sitemaps import DocumentSitemap
+
+    urlpatterns += patterns(
+        '',
+        url(r'^sitemap.xml$', 'django.contrib.sitemaps.views.sitemap', {
+            'sitemaps': {
+                'documents': DocumentSitemap,
+            }, }),
+    )
+
 
 Contribute
 ----------

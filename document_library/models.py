@@ -83,7 +83,7 @@ class DocumentCategory(TranslatableModel):
 
 class DocumentManager(TranslationManager):
     """Custom manager for the ``Document`` model."""
-    def published(self, request):
+    def published(self, request=None):
         """
         Returns the published documents in the current language.
 

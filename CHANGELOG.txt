@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Added sitemap
+
 === 1.2 ===
 
 - Added DOCUMENT_LIBRARY_PAGINATION_AMOUNT setting
