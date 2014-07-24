@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 1.4 ===
+
 - Changed ordering to document_date field
 
 === 1.3 ===
