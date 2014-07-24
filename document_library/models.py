@@ -239,7 +239,7 @@ class Document(TranslatableModel):
     objects = DocumentManager()
 
     class Meta:
-        ordering = ('position', '-creation_date', )
+        ordering = ('position', '-document_date', )
 
     def __unicode__(self):
         return self.get_title()
