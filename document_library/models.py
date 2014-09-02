@@ -12,6 +12,7 @@ from cms.models.pluginmodel import CMSPlugin
 from hvad.models import TranslatedFields, TranslatableModel, TranslationManager
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
+from filer.fields.folder import FilerFolderField
 
 
 class Attachment(models.Model):
@@ -128,6 +129,7 @@ class Document(TranslatableModel):
     :document_date: The date of the document itself. Don't confuse this with
       creation_date.
     :image: Document image. E.g. scan, cover.
+    :folder: Filer folder to e.g. display a gallery.
 
     translated:
     :title: The title of the document.
@@ -198,6 +200,12 @@ class Document(TranslatableModel):
     image = FilerImageField(
         verbose_name=_('Image'),
         related_name='document_images',
+        null=True, blank=True,
+    )
+
+    folder = FilerFolderField(
+        verbose_name=_('Folder'),
+        related_name='document_folders',
         null=True, blank=True,
     )
 

@@ -1,5 +1,7 @@
 === ongoing ===
 
+- Added folder field to document model
+
 === 1.4 ===
 
 - Changed ordering to document_date field
