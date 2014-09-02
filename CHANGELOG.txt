@@ -1,5 +1,7 @@
 === ongoing ===
 
+=== 1.4.1 ===
+
 - Added folder field to document model
 
 === 1.4 ===
