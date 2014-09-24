@@ -31,3 +31,16 @@ def get_frontpage_documents(context):
     req = context.get('request')
     qs = Document.objects.published(req).filter(is_on_front_page=True)
     return qs
+
+
+@register.assignment_tag(takes_context=True)
+def get_latest_documents(context, count=5):
+    """
+    Returns the latest documents.
+
+    :param count: Number of documents to be returned. Defaults to 5.
+
+    """
+    req = context.get('request')
+    qs = Document.objects.published(req)[:count]
+    return qs

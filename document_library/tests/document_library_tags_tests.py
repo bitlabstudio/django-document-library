@@ -12,10 +12,7 @@ from filer.tests.helpers import create_image
 
 from django_libs.tests.factories import UserFactory
 
-from document_library.templatetags.document_library_tags import (
-    get_files_for_document,
-    get_frontpage_documents,
-)
+from document_library.templatetags import document_library_tags as tags
 from document_library.tests.factories import DocumentFactory
 
 
@@ -49,7 +46,7 @@ class GetFilesForDocumentTestCase(TestCase):
             f.delete()
 
     def test_tag(self):
-        result = get_files_for_document(self.doc_en)
+        result = tags.get_files_for_document(self.doc_en)
         self.assertEqual(len(result), 1, msg=(
             'Should return only the english file for the given document'))
 
@@ -74,7 +71,7 @@ class GetFrontpageDocumentsTestCase(TestCase):
         req = RequestFactory().get('/')
         req.LANGUAGE_CODE = 'en'
         context = RequestContext(req)
-        result = get_frontpage_documents(context)
+        result = tags.get_frontpage_documents(context)
         self.assertEqual(result.count(), 1, msg=(
             'It should only return one document.'))
         self.assertEqual(result[0], self.en_doc, msg=(
@@ -83,9 +80,31 @@ class GetFrontpageDocumentsTestCase(TestCase):
 
         req.LANGUAGE_CODE = 'de'
         context = RequestContext(req)
-        result = get_frontpage_documents(context)
+        result = tags.get_frontpage_documents(context)
         self.assertEqual(result.count(), 1, msg=(
             'It should only return one document.'))
         self.assertEqual(result[0], self.de_doc, msg=(
             'Should return the one german document that has'
             ' is_on_fron_page=True'))
+
+
+class GetLatestDocumentsTestCase(TestCase):
+    """Tests for the ``get_latest_documents`` tamplatetag."""
+    longMessage = True
+
+    def test_tag(self):
+        DocumentFactory(language_code='en', is_published=True)
+        DocumentFactory(language_code='en', is_published=True)
+        DocumentFactory(language_code='en', is_published=True)
+        DocumentFactory(language_code='en', is_published=False)
+
+        req = RequestFactory().get('/')
+        req.LANGUAGE_CODE = 'en'
+        context = RequestContext(req)
+        result = tags.get_latest_documents(context)
+        self.assertEqual(result.count(), 3, msg=(
+            'Should return up to five published documents'))
+
+        result = tags.get_latest_documents(context, count=2)
+        self.assertEqual(result.count(), 2, msg=(
+            'Should return the requested number of published documents'))

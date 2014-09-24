@@ -1,4 +1,6 @@
-=== ongoing ===
+=== ongoing (1.4.X)===
+
+- Added get_latest_documents assignment tag
 
 === 1.4.1 ===
 
