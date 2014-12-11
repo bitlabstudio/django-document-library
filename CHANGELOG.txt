@@ -1,4 +1,6 @@
-=== ongoing (1.4.X)===
+=== ongoing (1.5.X)===
+
+=== 1.5 ===
 
 - Added DOCUMENT_LIBRARY_PAGINATE_BY_CATEGORIES setting
 - Added functions to return similar amounts of documents based on categories
