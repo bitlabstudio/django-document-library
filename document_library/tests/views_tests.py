@@ -1,6 +1,5 @@
 """Tests for the views of the ``document_library`` app."""
 from django.test import TestCase, RequestFactory
-from django.utils.translation import get_language
 
 from django_libs.tests.mixins import ViewRequestFactoryTestMixin
 
@@ -8,14 +7,14 @@ from .factories import DocumentFactory
 from .. import views
 
 
-class DocumentListViewTestCase(TestCase):
+class DocumentListViewTestCase(ViewRequestFactoryTestMixin, TestCase):
     """Tests for the ``DocumentListView`` view."""
+    def setUp(self):
+        self.document = DocumentFactory()
+        self.view_class = views.DocumentListView
+
     def test_view(self):
-        DocumentFactory()
-        req = RequestFactory().get('/')
-        req.LANGUAGE_CODE = get_language()
-        resp = views.DocumentListView.as_view()(req)
-        self.assertEqual(resp.status_code, 200)
+        self.is_callable()
 
 
 class DocumentDetailViewTestCase(TestCase):

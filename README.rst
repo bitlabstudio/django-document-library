@@ -95,6 +95,15 @@ Default: 1
 Amount of documents display on one page.
 
 
+DOCUMENT_LIBRARY_PAGINATE_BY_CATEGORIES
++++++++++++++++++++++++++++++++++++++++
+
+Default: False
+
+Enables a special ordering of the document list to always show an equal amount
+of documents for each category.
+
+
 Sitemaps
 ++++++++
 

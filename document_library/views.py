@@ -38,6 +38,24 @@ class DocumentListMixin(object):
             'month': truncate_date})
         self.months = qs.values('month').annotate(
             models.Count('pk')).order_by('-month')
+        if settings.PAGINATE_BY_CATEGORIES:
+            categories = DocumentCategory.objects.all()
+            max_amount = 0
+            item_range = settings.PAGINATION_AMOUNT / categories.count()
+            end_amount = qs.count()
+            pks = []
+            while max_amount < end_amount:
+                for category in categories:
+                    package = qs.filter(category=category)[
+                        max_amount:max_amount + item_range].values_list(
+                            'pk', flat=True)
+                    pks += package
+                max_amount += item_range
+            clauses = ' '.join(
+                ['WHEN id=%s THEN %s' % (pk, i) for i, pk in enumerate(pks)])
+            ordering = 'CASE %s END' % clauses
+            qs = Document.objects.filter(pk__in=pks).extra(
+                select={'ordering': ordering}, order_by=('ordering',))
         return qs
 
 

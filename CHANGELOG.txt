@@ -1,5 +1,7 @@
 === ongoing (1.4.X)===
 
+- Added DOCUMENT_LIBRARY_PAGINATE_BY_CATEGORIES setting
+- Added functions to return similar amounts of documents based on categories
 - Added get_latest_documents assignment tag
 
 === 1.4.1 ===
