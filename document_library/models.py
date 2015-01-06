@@ -13,6 +13,7 @@ from hvad.models import TranslatedFields, TranslatableModel, TranslationManager
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 from filer.fields.folder import FilerFolderField
+from django.conf import settings
 
 
 class Attachment(models.Model):
@@ -152,7 +153,7 @@ class Document(TranslatableModel):
     )
 
     user = models.ForeignKey(
-        'auth.User',
+        settings.AUTH_USER_MODEL,
         verbose_name=_('User'),
         null=True, blank=True,
     )
