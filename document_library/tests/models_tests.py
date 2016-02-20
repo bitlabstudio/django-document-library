@@ -6,13 +6,9 @@ from mock import Mock
 
 from django.test import TestCase
 
-from ..models import Document, DocumentPlugin
-from .factories import (
-    AttachmentFactory,
-    DocumentFactory,
-    DocumentCategoryFactory,
-    FileFactory,
-)
+from mixer.backend.django import mixer
+
+from .. import models
 
 
 class AttachmentTestCase(TestCase):
@@ -20,7 +16,7 @@ class AttachmentTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        obj = AttachmentFactory()
+        obj = mixer.blend('document_library.Attachment')
         self.assertTrue(obj.pk, msg=(
             'Should be able to instantiate and save the model.'))
 
@@ -30,18 +26,19 @@ class DocumentTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = DocumentFactory()
+        instance = mixer.blend('document_library.DocumentTranslation')
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
 
     def test_get_filetype(self):
-        instance = DocumentFactory()
-        self.assertEqual(instance.get_filetype(), None, msg=(
-            'Should return the translated filetype.'))
-
-        instance.filer_file = FileFactory()
+        instance = mixer.blend('document_library.DocumentTranslation',
+                               language_code='en').master
         self.assertEqual(instance.get_filetype(), '', msg=(
-            'Should return the translated filetype.'))
+            'Should return the filetype.'))
+
+        instance.filer_file = mixer.blend('filer.File')
+        self.assertEqual(instance.get_filetype(), '', msg=(
+            'Should return the filetype.'))
 
 
 class DocumentCategoryTestCase(TestCase):
@@ -49,15 +46,15 @@ class DocumentCategoryTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = DocumentCategoryFactory()
+        instance = mixer.blend(
+            'document_library.DocumentCategoryTranslation').master
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
 
     def test_get_title(self):
-        instance = DocumentFactory()
-        result = instance.get_title()
-        self.assertEqual(result, instance.title, msg=(
-            'Should return the translated title.'))
+        instance = mixer.blend('document_library.DocumentCategoryTranslation')
+        result = instance.master.get_title()
+        self.assertTrue(result, msg=('Should return the translated title.'))
 
 
 class DocumentManagerTestCase(TestCase):
@@ -65,40 +62,49 @@ class DocumentManagerTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        self.en_doc = DocumentFactory(
-            category=DocumentCategoryFactory(is_published=True),
+        self.en_doc = mixer.blend(
+            'document_library.DocumentTranslation',
+            category=mixer.blend(
+                'document_library.DocumentCategoryTranslation',
+                is_published=True),
             language_code='en', is_published=False)
-        self.de_doc = DocumentFactory(
-            category=DocumentCategoryFactory(is_published=True),
+        self.de_doc = mixer.blend(
+            'document_library.DocumentTranslation',
+            category=mixer.blend(
+                'document_library.DocumentCategoryTranslation',
+                is_published=True),
             language_code='de', is_published=False)
-        self.de_doc_no_public_cat = DocumentFactory(
-            category=DocumentCategoryFactory(is_published=False),
+        self.de_doc_no_public_cat = mixer.blend(
+            'document_library.DocumentTranslation',
+            category=mixer.blend(
+                'document_library.DocumentCategoryTranslation',
+                is_published=False),
             language_code='de', is_published=False)
-        new_doc = self.de_doc.translate('en')
+        new_doc = self.de_doc.master.translate('en')
         new_doc.is_published = True
         new_doc.save()
-        new_doc = self.en_doc.translate('de')
+        new_doc = self.en_doc.master.translate('de')
         new_doc.is_published = True
         new_doc.save()
-        new_doc = self.de_doc_no_public_cat.translate('en')
-        new_doc.is_published = True
+        new_doc = self.de_doc_no_public_cat.master.translate('en')
+        new_doc.is_published = False
         new_doc.save()
 
     def test_manager(self):
         """Testing if the ``DocumentManager`` retrieves the correct objects."""
         request = Mock(LANGUAGE_CODE='de')
         self.assertEqual(
-            Document.objects.published(request).count(), 1, msg=(
+            models.Document.objects.published(request).count(), 1, msg=(
                 'In German, there should be one published document.'))
 
         request = Mock(LANGUAGE_CODE='en')
         self.assertEqual(
-            Document.objects.published(request).count(), 1, msg=(
+            models.Document.objects.published(request).count(), 1, msg=(
                 'In English, there should be one published document.'))
 
         request = Mock(LANGUAGE_CODE=None)
         self.assertEqual(
-            Document.objects.published(request).count(), 0, msg=(
+            models.Document.objects.published(request).count(), 0, msg=(
                 'If no language is set, there should be no published'
                 ' documents.'))
 
@@ -108,7 +114,8 @@ class DocumentPluginTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = DocumentPlugin(document=DocumentFactory())
+        instance = models.DocumentPlugin(document=mixer.blend(
+            'document_library.DocumentTranslation').master)
         instance.save()
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))

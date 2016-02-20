@@ -1,9 +1,6 @@
 """Settings that need to be set in order to run the tests."""
-import logging
 import os
 
-
-logging.getLogger('factory').setLevel(logging.WARN)
 
 DOCUMENT_LIBRARY_PAGINATION_AMOUNT = 2
 DOCUMENT_LIBRARY_PAGINATE_BY_CATEGORIES = True
@@ -45,18 +42,6 @@ STATICFILES_DIRS = (
     os.path.join(os.path.dirname(__file__), 'test_static'),
 )
 
-TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), '../templates'),
-)
-
-COVERAGE_REPORT_HTML_OUTPUT_DIR = os.path.join(
-    os.path.dirname(__file__), 'coverage')
-
-COVERAGE_MODULE_EXCLUDES = [
-    'tests$', 'settings$', 'urls$', 'locale$',
-    'migrations', 'fixtures', 'admin$', 'django_extensions',
-]
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -71,15 +56,22 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.language.LanguageCookieMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.request',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'cms.context_processors.media',
-    'sekizai.context_processors.sekizai',
-)
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'APP_DIRS': True,
+    'DIRS': [os.path.join(os.path.dirname(__file__), '../templates')],
+    'OPTIONS': {
+        'context_processors': (
+            'django.contrib.auth.context_processors.auth',
+            'django.core.context_processors.i18n',
+            'django.template.context_processors.request',
+            'django.core.context_processors.media',
+            'django.core.context_processors.static',
+            'cms.context_processors.media',
+            'sekizai.context_processors.sekizai',
+        )
+    }
+}]
 
 THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.colorspace',
@@ -109,6 +101,7 @@ EXTERNAL_APPS = [
     'filer',
     'easy_thumbnails',
     'hvad',
+    'treebeard',
 ]
 
 INTERNAL_APPS = [
@@ -117,8 +110,6 @@ INTERNAL_APPS = [
 ]
 
 INSTALLED_APPS = EXTERNAL_APPS + INTERNAL_APPS
-
-COVERAGE_MODULE_EXCLUDES += EXTERNAL_APPS
 
 CMS_SOFTROOT = True
 CMS_PERMISSION = False
@@ -130,7 +121,3 @@ CMS_TEMPLATES = (
 )
 
 SECRET_KEY = 'foobar'
-
-SOUTH_MIGRATION_MODULES = {
-    'easy_thumbnails': 'easy_thumbnails.south_migrations',
-}

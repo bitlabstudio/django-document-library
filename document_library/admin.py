@@ -3,18 +3,18 @@ from django.contrib import admin
 from django.contrib.contenttypes.generic import GenericTabularInline
 from django.utils.translation import ugettext_lazy as _
 
-from cms.admin.placeholderadmin import PlaceholderAdmin
+from cms.admin.placeholderadmin import PlaceholderAdminMixin
 from hvad.admin import TranslatableAdmin
 
-from .models import Attachment, Document, DocumentCategory
+from . import models
 
 
-class MulilingualModelAdmin(TranslatableAdmin, PlaceholderAdmin):
+class MulilingualModelAdmin(PlaceholderAdminMixin, TranslatableAdmin):
     pass
 
 
 class AttachmentInline(GenericTabularInline):
-    model = Attachment
+    model = models.Attachment
     extra = 1
     raw_id_fields = ['document', ]
 
@@ -45,5 +45,5 @@ class DocumentCategoryAdmin(MulilingualModelAdmin):
     get_title.short_description = _('Title')
 
 
-admin.site.register(Document, DocumentAdmin)
-admin.site.register(DocumentCategory, DocumentCategoryAdmin)
+admin.site.register(models.Document, DocumentAdmin)
+admin.site.register(models.DocumentCategory, DocumentCategoryAdmin)

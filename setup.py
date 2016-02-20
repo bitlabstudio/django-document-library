@@ -36,7 +36,6 @@ setup(
     dependency_links=dependency_links,
     tests_require=[
         'fabric',
-        'factory_boy',
         'django-nose',
         'coverage',
         'django-coverage',

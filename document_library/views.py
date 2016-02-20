@@ -41,7 +41,7 @@ class DocumentListMixin(object):
         if settings.PAGINATE_BY_CATEGORIES:
             categories = DocumentCategory.objects.all()
             max_amount = 0
-            item_range = settings.PAGINATION_AMOUNT / categories.count()
+            item_range = settings.PAGINATION_AMOUNT / (categories.count() or 1)
             end_amount = qs.count()
             pks = []
             while max_amount < end_amount:

@@ -1,7 +1,7 @@
 """Templatetags for the ``document_library`` app."""
 from django import template
 
-from document_library.models import Document
+from ..models import Document
 
 
 register = template.Library()

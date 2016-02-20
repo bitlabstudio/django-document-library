@@ -4,6 +4,7 @@
 .tox
 chromedriver.log
 coverage/
+.coverage
 db.sqlite
 dist/
 media/

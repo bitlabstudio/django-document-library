@@ -1,7 +1,7 @@
 """Sitemaps for the `multilingual_news` app."""
 from django.contrib.sitemaps import Sitemap
 
-from document_library.models import Document
+from .models import Document
 
 
 class DocumentSitemap(Sitemap):

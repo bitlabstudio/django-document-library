@@ -1,6 +1,7 @@
 """Models for the ``document_library`` app."""
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
@@ -13,7 +14,6 @@ from hvad.models import TranslatedFields, TranslatableModel, TranslationManager
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 from filer.fields.folder import FilerFolderField
-from django.conf import settings
 
 
 class Attachment(models.Model):
@@ -96,7 +96,7 @@ class DocumentManager(TranslationManager):
         if not language:
             return self.model.objects.none()
 
-        qs = self.get_query_set()
+        qs = self.get_queryset()
         qs = qs.filter(
             translations__is_published=True,
             translations__language_code=language,
@@ -258,9 +258,10 @@ class Document(TranslatableModel):
             'pk': self.pk, })
 
     def get_filetype(self):
-        if self.filer_file:
+        try:
             return self.filer_file.extension.upper()
-        return None
+        except AttributeError:
+            return ''
 
     def get_title(self):
         # Kept for backwards compatibility
