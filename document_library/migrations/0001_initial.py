@@ -77,17 +77,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='DocumentPlugin',
-            fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
-                ('document', models.ForeignKey(verbose_name='Document', to='document_library.Document')),
-            ],
-            options={
-                'abstract': False,
-            },
-            bases=('cms.cmsplugin',),
-        ),
-        migrations.CreateModel(
             name='DocumentTranslation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
