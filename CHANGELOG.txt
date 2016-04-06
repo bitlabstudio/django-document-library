@@ -1,6 +1,6 @@
 === ongoing (1.5.X)===
 
-- Prepared app for Django 1.8
+- Prepared app for Django 1.9
 - Fixed new migrations
 
 === 1.5 ===

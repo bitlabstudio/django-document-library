@@ -4,8 +4,8 @@
 # Packages essential to this app. Needed by anyone who wants to use this app.
 # ===========================================================================
 
-django==1.8.9
-django_libs==1.66.12
+django==1.9.5
+django_libs==1.66.13
 django-hvad==1.5.0
 Pillow==3.1.1
 python-dateutil==2.4.2
@@ -20,7 +20,7 @@ djangocms-text-ckeditor==2.8.1
 # Packages needed for running the tests. Needed by contributors.
 # ==============================================================
 Fabric
-mixer
+mixer==5.5.6
 mock
 django-nose
 coverage

@@ -48,12 +48,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.doc.XViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
     'cms.middleware.language.LanguageCookieMiddleware',
+    'cms.middleware.utils.ApphookReloadMiddleware',
 )
 
 TEMPLATES = [{
@@ -67,7 +67,6 @@ TEMPLATES = [{
             'django.template.context_processors.request',
             'django.core.context_processors.media',
             'django.core.context_processors.static',
-            'cms.context_processors.media',
             'sekizai.context_processors.sekizai',
         )
     }

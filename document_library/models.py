@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import get_language, ugettext_lazy as _
 
 from cms.models.fields import PlaceholderField
@@ -16,6 +17,7 @@ from filer.fields.image import FilerImageField
 from filer.fields.folder import FilerFolderField
 
 
+@python_2_unicode_compatible
 class Attachment(models.Model):
     """
     Mapping class to map any object to ``Document`` objects.
@@ -36,12 +38,16 @@ class Attachment(models.Model):
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
         ordering = ['position', ]
 
+    def __str__(self):
+        return self.document.get_title()
 
+
+@python_2_unicode_compatible
 class DocumentCategory(TranslatableModel):
     """
     Documents can be grouped in categories.
@@ -76,7 +82,7 @@ class DocumentCategory(TranslatableModel):
         )
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.get_title()
 
     def get_title(self):
@@ -116,6 +122,7 @@ class DocumentPlugin(CMSPlugin):
     )
 
 
+@python_2_unicode_compatible
 class Document(TranslatableModel):
     """
     A document consists of a title and description and a number of filer-files.
@@ -250,7 +257,7 @@ class Document(TranslatableModel):
     class Meta:
         ordering = ('position', '-document_date', )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.get_title()
 
     def get_absolute_url(self):
