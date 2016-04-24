@@ -1,11 +1,10 @@
 """URLs for the ``document_library`` app."""
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from . import views
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'(?P<year>\d+)/(?P<month>\d+)/$',
         views.DocumentMonthView.as_view(),
         name='document_library_month'),
@@ -15,4 +14,4 @@ urlpatterns = patterns(
     url(r'^(?P<pk>\d+)/$',
         views.DocumentDetailView.as_view(),
         name='document_library_detail'),
-)
+]

@@ -1,0 +1,16 @@
+# ==============================================================
+# Packages needed for running the tests. Needed by contributors.
+# ==============================================================
+django-cms
+django-filer
+cmsplugin-filer
+djangocms-text-ckeditor
+fabric3
+mixer
+mock
+coverage
+django-coverage
+ipython
+ipdb
+flake8
+tox

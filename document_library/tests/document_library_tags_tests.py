@@ -1,14 +1,7 @@
 """Tests for the templatetags of the ``document_library`` app."""
-import os
-
-from django.conf import settings
-from django.core.files import File as DjangoFile
 from django.template import RequestContext
 from django.test import TestCase, RequestFactory
 
-from filer.models.filemodels import File
-from filer.models.imagemodels import Image
-from filer.tests.helpers import create_image
 from mixer.backend.django import mixer
 
 from ..templatetags import document_library_tags
@@ -19,37 +12,17 @@ class GetFilesForDocumentTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        super(GetFilesForDocumentTestCase, self).setUp()
         self.user = mixer.blend('auth.User')
-        self.img = create_image()
-        self.image_name = 'test_file.png'
-        self.filename = os.path.join(
-            settings.MEDIA_ROOT, self.image_name)
-        self.img.save(self.filename, 'JPEG')
-        self.file_obj = DjangoFile(open(self.filename), name=self.image_name)
-        self.image = Image.objects.create(
-            owner=self.user, original_filename=self.image_name,
-            file=self.file_obj)
-        self.doc_en = mixer.blend(
-            'document_library.DocumentTranslation',
-            language_code='en',
-            filer_file=self.image)
-        self.doc_de = mixer.blend(
-            'document_library.DocumentTranslation',
-            language_code='en',
-            filer_file=self.image)
-
-    def tearDown(self):
-        super(GetFilesForDocumentTestCase, self).tearDown()
-        os.remove(self.filename)
-        for f in File.objects.all():
-            f.delete()
+        self.doc = mixer.blend('document_library.Document')
+        self.doc_en = self.doc.translate('en')
+        self.doc_en.save()
+        self.doc_de = self.doc.translate('de')
+        self.doc_de.save()
 
     def test_tag(self):
-        result = document_library_tags.get_files_for_document(
-            self.doc_en.master)
-        self.assertEqual(len(result), 1, msg=(
-            'Should return only the english file for the given document'))
+        result = document_library_tags.get_files_for_document(self.doc_en)
+        self.assertEqual(len(result), 0, msg=(
+            'Shouldn\'t return any files.'))
 
 
 class GetFrontpageDocumentsTestCase(TestCase):

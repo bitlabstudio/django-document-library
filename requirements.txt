@@ -1,30 +1,8 @@
-# Install these requirements if you wish to contribute to this project.
-
 # ===========================================================================
 # Packages essential to this app. Needed by anyone who wants to use this app.
 # ===========================================================================
-
-django==1.9.5
-django_libs==1.66.13
-django-hvad==1.5.0
-Pillow==3.1.1
-python-dateutil==2.4.2
-
-django-cms==3.2.1
-django-filer==1.1.1
-cmsplugin-filer==1.0.1
-djangocms-text-ckeditor==2.8.1
-
-
-# ==============================================================
-# Packages needed for running the tests. Needed by contributors.
-# ==============================================================
-Fabric
-mixer==5.5.6
-mock
-django-nose
-coverage
-django-coverage
-ipython
-ipdb
-flake8
+django
+django_libs
+django-hvad
+Pillow
+python-dateutil

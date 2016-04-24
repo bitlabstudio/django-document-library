@@ -63,10 +63,10 @@ TEMPLATES = [{
     'OPTIONS': {
         'context_processors': (
             'django.contrib.auth.context_processors.auth',
-            'django.core.context_processors.i18n',
+            'django.template.context_processors.i18n',
             'django.template.context_processors.request',
-            'django.core.context_processors.media',
-            'django.core.context_processors.static',
+            'django.template.context_processors.media',
+            'django.template.context_processors.static',
             'sekizai.context_processors.sekizai',
         )
     }
@@ -91,7 +91,6 @@ EXTERNAL_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django_libs',
-    'django_nose',
     'djangocms_text_ckeditor',
     'cms',
     'mptt',

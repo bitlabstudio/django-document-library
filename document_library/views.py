@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView
 
 from dateutil import relativedelta
-from django_libs.utils import conditional_decorator
+from django_libs.utils.decorators import conditional_decorator
 
 from .models import Document, DocumentCategory
 from . import settings
