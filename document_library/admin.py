@@ -25,6 +25,7 @@ class DocumentAdmin(MulilingualModelAdmin):
         'get_title', 'category', 'position', 'user', 'is_on_front_page',
         'all_translations', 'get_is_published',
     ]
+    list_select_related = []
 
     def get_title(self, obj):
         return obj.title

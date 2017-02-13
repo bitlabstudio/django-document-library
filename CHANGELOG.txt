@@ -3,6 +3,7 @@
 - Prepared app for Django 1.9
 - Prepared app for Python 3.5
 - Fixed new migrations
+- Fixed document admin
 
 === 1.5 ===
 
