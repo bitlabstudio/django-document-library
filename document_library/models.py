@@ -1,20 +1,19 @@
 """Models for the ``document_library`` app."""
 from __future__ import unicode_literals
 
+from cms.models.fields import PlaceholderField
+from cms.models.pluginmodel import CMSPlugin
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import get_language, ugettext_lazy as _
-
-from cms.models.fields import PlaceholderField
-from cms.models.pluginmodel import CMSPlugin
-from hvad.models import TranslatedFields, TranslatableModel, TranslationManager
 from filer.fields.file import FilerFileField
-from filer.fields.image import FilerImageField
 from filer.fields.folder import FilerFolderField
+from filer.fields.image import FilerImageField
+from hvad.models import TranslatableModel, TranslatedFields, TranslationManager
 
 
 @python_2_unicode_compatible
@@ -29,6 +28,7 @@ class Attachment(models.Model):
     document = models.ForeignKey(
         'document_library.Document',
         verbose_name=_('Document'),
+        on_delete=models.CASCADE,
     )
 
     position = models.PositiveIntegerField(
@@ -36,7 +36,7 @@ class Attachment(models.Model):
         null=True, blank=True,
     )
 
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
@@ -119,6 +119,7 @@ class DocumentPlugin(CMSPlugin):
     document = models.ForeignKey(
         'document_library.Document',
         verbose_name=_('Document'),
+        on_delete=models.CASCADE,
     )
 
 
@@ -152,6 +153,7 @@ class Document(TranslatableModel):
         DocumentCategory,
         verbose_name=_('Category'),
         null=True, blank=True,
+        on_delete=models.SET_NULL,
     )
 
     creation_date = models.DateTimeField(
@@ -163,6 +165,7 @@ class Document(TranslatableModel):
         settings.AUTH_USER_MODEL,
         verbose_name=_('User'),
         null=True, blank=True,
+        on_delete=models.CASCADE,
     )
 
     position = models.PositiveIntegerField(
