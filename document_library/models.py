@@ -212,12 +212,14 @@ class Document(TranslatableModel):
         verbose_name=_('Image'),
         related_name='document_images',
         null=True, blank=True,
+        on_delete=models.CASCADE,
     )
 
     folder = FilerFolderField(
         verbose_name=_('Folder'),
         related_name='document_folders',
         null=True, blank=True,
+        on_delete=models.CASCADE,
     )
 
     translations = TranslatedFields(
@@ -233,11 +235,13 @@ class Document(TranslatableModel):
             verbose_name=_('File'),
             related_name='document_files',
             null=True, blank=True,
+            on_delete=models.CASCADE,
         ),
         thumbnail=FilerFileField(
             verbose_name=_('Thumbnail'),
             related_name='document_thumbnails',
             null=True, blank=True,
+            on_delete=models.CASCADE,
         ),
         copyright_notice=models.CharField(
             max_length=1024,
