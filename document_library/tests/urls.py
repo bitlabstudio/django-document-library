@@ -18,7 +18,6 @@ admin.autodiscover()
 urlpatterns = static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += i18n_patterns(
-    url(r'^admin/', include(admin.site.urls)),
     url(r'^docs/', include('document_library.urls')),
     url(r'^', include('cms.urls')),
 )

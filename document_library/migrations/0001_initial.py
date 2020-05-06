@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('position', models.PositiveIntegerField(null=True, verbose_name='Position', blank=True)),
                 ('object_id', models.PositiveIntegerField()),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE,)),
             ],
             options={
                 'ordering': ['position'],
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=256, verbose_name='Title')),
                 ('language_code', models.CharField(max_length=15, db_index=True)),
-                ('master', models.ForeignKey(related_name='translations', editable=False, to='document_library.DocumentCategory', null=True)),
+                ('master', models.ForeignKey(related_name='translations', editable=False, to='document_library.DocumentCategory', null=True, on_delete=models.SET_NULL,)),
             ],
             options={
                 'managed': True,
@@ -86,9 +86,9 @@ class Migration(migrations.Migration):
                 ('is_published', models.BooleanField(default=False, verbose_name='Is published')),
                 ('meta_description', models.TextField(max_length=512, verbose_name='Meta description', blank=True)),
                 ('language_code', models.CharField(max_length=15, db_index=True)),
-                ('filer_file', filer.fields.file.FilerFileField(related_name='document_files', verbose_name='File', blank=True, to='filer.File', null=True)),
-                ('master', models.ForeignKey(related_name='translations', editable=False, to='document_library.Document', null=True)),
-                ('thumbnail', filer.fields.file.FilerFileField(related_name='document_thumbnails', verbose_name='Thumbnail', blank=True, to='filer.File', null=True)),
+                ('filer_file', filer.fields.file.FilerFileField(related_name='document_files', verbose_name='File', blank=True, to='filer.File', null=True, on_delete=models.CASCADE)),
+                ('master', models.ForeignKey(related_name='translations', editable=False, to='document_library.Document', null=True, on_delete=models.CASCADE)),
+                ('thumbnail', filer.fields.file.FilerFileField(related_name='document_thumbnails', verbose_name='Thumbnail', blank=True, to='filer.File', null=True, on_delete=models.CASCADE)),
             ],
             options={
                 'managed': True,
@@ -101,7 +101,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='document',
             name='category',
-            field=models.ForeignKey(verbose_name='Category', blank=True, to='document_library.DocumentCategory', null=True),
+            field=models.ForeignKey(verbose_name='Category', blank=True, to='document_library.DocumentCategory', null=True, on_delete=models.SET_NULL),
         ),
         migrations.AddField(
             model_name='document',
@@ -111,22 +111,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='document',
             name='folder',
-            field=filer.fields.folder.FilerFolderField(related_name='document_folders', verbose_name='Folder', blank=True, to='filer.Folder', null=True),
+            field=filer.fields.folder.FilerFolderField(related_name='document_folders', verbose_name='Folder', blank=True, to='filer.Folder', null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='document',
             name='image',
-            field=filer.fields.image.FilerImageField(related_name='document_images', verbose_name='Image', blank=True, to='filer.Image', null=True),
+            field=filer.fields.image.FilerImageField(related_name='document_images', verbose_name='Image', blank=True, to='filer.Image', null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='document',
             name='user',
-            field=models.ForeignKey(verbose_name='User', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(verbose_name='User', blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='attachment',
             name='document',
-            field=models.ForeignKey(verbose_name='Document', to='document_library.Document'),
+            field=models.ForeignKey(verbose_name='Document', to='document_library.Document', on_delete=models.CASCADE),
         ),
         migrations.AlterUniqueTogether(
             name='documenttranslation',

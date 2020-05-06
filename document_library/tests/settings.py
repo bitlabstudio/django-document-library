@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 These settings are used by the ``manage.py`` command.
 With normal tests we want to use the fastest possible way which is an
@@ -11,7 +12,6 @@ from distutils.version import StrictVersion
 import django
 
 from .test_settings import *  # NOQA
-
 
 DATABASES = {
     'default': {

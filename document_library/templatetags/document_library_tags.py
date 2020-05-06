@@ -7,7 +7,7 @@ from ..models import Document
 register = template.Library()
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_files_for_document(document):
     """
     Returns the available files for all languages.
@@ -25,7 +25,7 @@ def get_files_for_document(document):
     return files
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def get_frontpage_documents(context):
     """Returns the library favs that should be shown on the front page."""
     req = context.get('request')
@@ -33,7 +33,7 @@ def get_frontpage_documents(context):
     return qs
 
 
-@register.assignment_tag(takes_context=True)
+@register.simple_tag(takes_context=True)
 def get_latest_documents(context, count=5):
     """
     Returns the latest documents.

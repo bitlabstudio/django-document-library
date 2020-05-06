@@ -2,7 +2,7 @@
 from django.template import RequestContext
 from django.test import TestCase, RequestFactory
 
-from mixer.backend.django import mixer
+from model_bakery import baker
 
 from ..templatetags import document_library_tags
 
@@ -12,8 +12,8 @@ class GetFilesForDocumentTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        self.user = mixer.blend('auth.User')
-        self.doc = mixer.blend('document_library.Document')
+        self.user = baker.make('auth.User')
+        self.doc = baker.make('document_library.Document')
         self.doc_en = self.doc.translate('en')
         self.doc_en.save()
         self.doc_de = self.doc.translate('de')
@@ -32,19 +32,18 @@ class GetFrontpageDocumentsTestCase(TestCase):
     def setUp(self):
         super(GetFrontpageDocumentsTestCase, self).setUp()
         # Two documents that should be on the front page
-        self.en_doc = mixer.blend(
+        self.en_doc = baker.make(
             'document_library.DocumentTranslation',
-            language_code='en', is_published=True,
-            is_on_front_page=True)
-        self.en_doc.master.is_published = True
+            language_code='en', is_published=True)
         self.en_doc.master.is_on_front_page = True
+        self.en_doc.master.is_published = True
         self.en_doc.master.save()
         self.de_doc = self.en_doc.master.translate('de')
         self.de_doc.is_published = True
         self.de_doc.save()
 
         # And one that should not be on the front page
-        mixer.blend('document_library.DocumentTranslation')
+        baker.make('document_library.DocumentTranslation')
 
     def test_tag(self):
         req = RequestFactory().get('/')
@@ -72,14 +71,14 @@ class GetLatestDocumentsTestCase(TestCase):
     longMessage = True
 
     def test_tag(self):
-        mixer.blend('document_library.DocumentTranslation', language_code='en',
-                    is_published=True)
-        mixer.blend('document_library.DocumentTranslation', language_code='en',
-                    is_published=True)
-        mixer.blend('document_library.DocumentTranslation', language_code='en',
-                    is_published=True)
-        mixer.blend('document_library.DocumentTranslation', language_code='en',
-                    is_published=False)
+        baker.make('document_library.DocumentTranslation', language_code='en',
+                   is_published=True)
+        baker.make('document_library.DocumentTranslation', language_code='en',
+                   is_published=True)
+        baker.make('document_library.DocumentTranslation', language_code='en',
+                   is_published=True)
+        baker.make('document_library.DocumentTranslation', language_code='en',
+                   is_published=False)
 
         req = RequestFactory().get('/')
         req.LANGUAGE_CODE = 'en'

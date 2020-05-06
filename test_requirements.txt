@@ -6,7 +6,7 @@ django-filer
 cmsplugin-filer
 djangocms-text-ckeditor
 fabric3
-mixer
+model_bakery
 mock
 coverage
 django-coverage

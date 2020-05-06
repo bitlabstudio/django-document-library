@@ -1,7 +1,7 @@
 # ===========================================================================
 # Packages essential to this app. Needed by anyone who wants to use this app.
 # ===========================================================================
-django
+django<3
 django_libs
 django-hvad
 Pillow

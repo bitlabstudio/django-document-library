@@ -91,6 +91,7 @@ class DocumentCategory(TranslatableModel):
 
 class DocumentManager(TranslationManager):
     """Custom manager for the ``Document`` model."""
+
     def published(self, request=None):
         """
         Returns the published documents in the current language.
@@ -109,8 +110,8 @@ class DocumentManager(TranslationManager):
         )
         # either it has no category or the one it has is published
         qs = qs.filter(
-            models.Q(category__isnull=True) |
-            models.Q(category__is_published=True))
+            models.Q(category__isnull=True) | models.Q(
+                category__is_published=True))
         return qs
 
 
@@ -262,7 +263,7 @@ class Document(TranslatableModel):
     objects = DocumentManager()
 
     class Meta:
-        ordering = ('position', '-document_date', )
+        ordering = ('position', '-document_date',)
 
     def __str__(self):
         return self.get_title()

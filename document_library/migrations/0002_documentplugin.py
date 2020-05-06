@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('cms', '0013_urlconfrevision'),
         ('document_library', '0001_initial'),
@@ -15,8 +14,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DocumentPlugin',
             fields=[
-                ('cmsplugin_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='cms.CMSPlugin')),
-                ('document', models.ForeignKey(verbose_name='Document', to='document_library.Document')),
+                ('cmsplugin_ptr',
+                 models.OneToOneField(parent_link=True, auto_created=True,
+                                      primary_key=True, serialize=False,
+                                      to='cms.CMSPlugin',
+                                      on_delete=models.CASCADE, )),
+                ('document', models.ForeignKey(verbose_name='Document',
+                                               to='document_library.Document',
+                                               on_delete=models.CASCADE, )),
             ],
             options={
                 'abstract': False,

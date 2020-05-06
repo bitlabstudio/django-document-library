@@ -6,7 +6,7 @@ from mock import Mock
 
 from django.test import TestCase
 
-from mixer.backend.django import mixer
+from model_bakery import baker
 
 from .. import models
 
@@ -16,7 +16,7 @@ class AttachmentTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        obj = mixer.blend('document_library.Attachment')
+        obj = baker.make('document_library.Attachment')
         self.assertTrue(obj.pk, msg=(
             'Should be able to instantiate and save the model.'))
 
@@ -26,18 +26,20 @@ class DocumentTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = mixer.blend('document_library.DocumentTranslation')
+        instance = baker.make('document_library.DocumentTranslation')
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
 
     def test_get_filetype(self):
-        instance = mixer.blend('document_library.DocumentTranslation',
-                               language_code='en').master
-        self.assertEqual(instance.get_filetype(), '', msg=(
-            'Should return the filetype.'))
+        self.de_doc = baker.make('document_library.DocumentTranslation')
+        instance = self.de_doc.master.translate('de')
 
-        instance.filer_file = mixer.blend('filer.File')
-        self.assertEqual(instance.get_filetype(), '', msg=(
+        self.assertEqual(
+            instance.get_filetype(), '', msg='Should return the filetype.')
+
+        instance.filer_file = baker.make('filer.File')
+        instance.filer_file.file.name = 'image.jpg'
+        self.assertEqual(instance.get_filetype(), 'JPG', msg=(
             'Should return the filetype.'))
 
 
@@ -46,13 +48,13 @@ class DocumentCategoryTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = mixer.blend(
+        instance = baker.make(
             'document_library.DocumentCategoryTranslation').master
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
 
     def test_get_title(self):
-        instance = mixer.blend('document_library.DocumentCategoryTranslation')
+        instance = baker.make('document_library.DocumentCategoryTranslation')
         result = instance.master.get_title()
         self.assertTrue(result, msg=('Should return the translated title.'))
 
@@ -62,31 +64,30 @@ class DocumentManagerTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        self.en_doc = mixer.blend(
-            'document_library.DocumentTranslation',
-            category=mixer.blend(
-                'document_library.DocumentCategoryTranslation',
-                is_published=True),
-            language_code='en', is_published=False)
-        self.de_doc = mixer.blend(
-            'document_library.DocumentTranslation',
-            category=mixer.blend(
-                'document_library.DocumentCategoryTranslation',
-                is_published=True),
-            language_code='de', is_published=False)
-        self.de_doc_no_public_cat = mixer.blend(
-            'document_library.DocumentTranslation',
-            category=mixer.blend(
-                'document_library.DocumentCategoryTranslation',
-                is_published=False),
-            language_code='de', is_published=False)
-        new_doc = self.de_doc.master.translate('en')
+        de_cat = baker.make('document_library.DocumentCategory',
+                            is_published=True)
+        self.de_doc = baker.make('document_library.DocumentTranslation')
+        new_doc = self.de_doc.master.translate('de')
+        new_doc.category = de_cat
         new_doc.is_published = True
         new_doc.save()
-        new_doc = self.en_doc.master.translate('de')
+
+        en_cat = baker.make('document_library.DocumentCategory',
+                            is_published=True)
+        self.en_doc = baker.make('document_library.DocumentTranslation')
+        new_doc = self.en_doc.master.translate('en')
+        new_doc.category = en_cat
         new_doc.is_published = True
         new_doc.save()
-        new_doc = self.de_doc_no_public_cat.master.translate('en')
+
+        nonpub_cat = baker.make(
+            'document_library.DocumentCategory',
+            is_published=False
+        )
+        self.de_doc_no_public_cat = baker.make(
+            'document_library.DocumentTranslation')
+        new_doc = self.de_doc_no_public_cat.master.translate('de')
+        new_doc.category = nonpub_cat
         new_doc.is_published = False
         new_doc.save()
 
@@ -114,7 +115,7 @@ class DocumentPluginTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = models.DocumentPlugin(document=mixer.blend(
+        instance = models.DocumentPlugin(document=baker.make(
             'document_library.DocumentTranslation').master)
         instance.save()
         self.assertTrue(instance.pk, msg=(
