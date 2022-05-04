@@ -16,7 +16,7 @@ If you want to install the latest stable release from PyPi::
 
 If you feel adventurous and want to install the latest commit from GitHub::
 
-    $ pip install -e git://github.com/bitmazk/django-document-library.git#egg=document_library
+    $ pip install -e git://github.com/bitlabstudio/django-document-library.git#egg=document_library
 
 Add ``document_library`` to your ``INSTALLED_APPS``::
 

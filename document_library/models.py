@@ -13,7 +13,8 @@ from django.utils.translation import get_language, ugettext_lazy as _
 from filer.fields.file import FilerFileField
 from filer.fields.folder import FilerFolderField
 from filer.fields.image import FilerImageField
-from hvad.models import TranslatableModel, TranslatedFields, TranslationManager
+from parler.managers import TranslationManager
+from parler.models import TranslatableModel, TranslatedFields
 
 
 @python_2_unicode_compatible
@@ -104,14 +105,8 @@ class DocumentManager(TranslationManager):
             return self.model.objects.none()
 
         qs = self.get_queryset()
-        qs = qs.filter(
-            translations__is_published=True,
-            translations__language_code=language,
-        )
-        # either it has no category or the one it has is published
-        qs = qs.filter(
-            models.Q(category__isnull=True) | models.Q(
-                category__is_published=True))
+        qs = qs.language(language).translated(is_published=True).filter(
+            models.Q(category__isnull=True) | models.Q(category__is_published=True))
         return qs
 
 

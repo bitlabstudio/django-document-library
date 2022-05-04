@@ -11,7 +11,7 @@ from .. import views
 class DocumentListViewTestCase(ViewRequestFactoryTestMixin, TestCase):
     """Tests for the ``DocumentListView`` view."""
     def setUp(self):
-        self.document = baker.make('document_library.DocumentTranslation')
+        self.document = baker.make('document_library.Document')
         self.view_class = views.DocumentListView
 
     def test_view(self):
@@ -21,7 +21,7 @@ class DocumentListViewTestCase(ViewRequestFactoryTestMixin, TestCase):
 class DocumentDetailViewTestCase(TestCase):
     """Tests for the ``DocumentDetailView`` view."""
     def test_view(self):
-        doc = baker.make('document_library.DocumentTranslation')
+        doc = baker.make('document_library.Document')
         req = RequestFactory().get('/')
         resp = views.DocumentDetailView.as_view()(req, pk=doc.pk)
         self.assertEqual(resp.status_code, 200)
@@ -30,8 +30,7 @@ class DocumentDetailViewTestCase(TestCase):
 class DocumentMonthViewTestCase(ViewRequestFactoryTestMixin, TestCase):
     """Tests for the ``DocumentMonthView`` view."""
     def setUp(self):
-        self.document = baker.make(
-            'document_library.DocumentTranslation').master
+        self.document = baker.make('document_library.Document')
         self.view_class = views.DocumentMonthView
 
     def get_view_kwargs(self):

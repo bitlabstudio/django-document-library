@@ -10,9 +10,7 @@ from fabric.api import local, warn
 from fabric.colors import green, red
 
 if __name__ == '__main__':
-    local('flake8 --ignore=E126 --ignore=W391 --statistics'
-          ' --exclude=submodules,migrations,south_migrations,build'
-          ',dist,site-packages,.tox .')
+    local('flake8 --statistics .')
     local('coverage run --source="document_library" manage.py test -v 2'
           ' --traceback --failfast --settings=document_library.tests.settings'
           ' --pattern="*_tests.py"')

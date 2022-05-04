@@ -26,21 +26,21 @@ class DocumentTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = baker.make('document_library.DocumentTranslation')
+        instance = baker.make('document_library.Document')
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
 
     def test_get_filetype(self):
-        self.de_doc = baker.make('document_library.DocumentTranslation')
-        instance = self.de_doc.master.translate('de')
+        self.de_doc = baker.make('document_library.Document')
+        self.de_doc.set_current_language('de')
+        self.de_doc.title = 'DE'
+        self.de_doc.save()
 
-        self.assertEqual(
-            instance.get_filetype(), '', msg='Should return the filetype.')
+        self.assertEqual(self.de_doc.get_filetype(), '', msg='Should return the filetype.')
 
-        instance.filer_file = baker.make('filer.File')
-        instance.filer_file.file.name = 'image.jpg'
-        self.assertEqual(instance.get_filetype(), 'JPG', msg=(
-            'Should return the filetype.'))
+        self.de_doc.filer_file = baker.make('filer.File')
+        self.de_doc.filer_file.file.name = 'image.jpg'
+        self.assertEqual(self.de_doc.get_filetype(), 'JPG', msg=('Should return the filetype.'))
 
 
 class DocumentCategoryTestCase(TestCase):
@@ -48,14 +48,13 @@ class DocumentCategoryTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = baker.make(
-            'document_library.DocumentCategoryTranslation').master
+        instance = baker.make('document_library.DocumentCategory')
         self.assertTrue(instance.pk, msg=(
             'Should be able to instantiate and save the object.'))
 
     def test_get_title(self):
-        instance = baker.make('document_library.DocumentCategoryTranslation')
-        result = instance.master.get_title()
+        instance = baker.make('document_library.DocumentCategory')
+        result = instance.get_title()
         self.assertTrue(result, msg=('Should return the translated title.'))
 
 
@@ -64,44 +63,44 @@ class DocumentManagerTestCase(TestCase):
     longMessage = True
 
     def setUp(self):
-        de_cat = baker.make('document_library.DocumentCategory',
-                            is_published=True)
-        self.de_doc = baker.make('document_library.DocumentTranslation')
-        new_doc = self.de_doc.master.translate('de')
-        new_doc.category = de_cat
-        new_doc.is_published = True
-        new_doc.save()
+        de_cat = baker.make('document_library.DocumentCategory', is_published=True)
+        self.de_doc = baker.make('document_library.Document')
+        self.de_doc.set_current_language('de')
+        self.de_doc.category = de_cat
+        self.de_doc.is_published = True
+        self.de_doc.title = 'DE'
+        self.de_doc.save()
 
-        en_cat = baker.make('document_library.DocumentCategory',
-                            is_published=True)
-        self.en_doc = baker.make('document_library.DocumentTranslation')
-        new_doc = self.en_doc.master.translate('en')
-        new_doc.category = en_cat
-        new_doc.is_published = True
-        new_doc.save()
+        en_cat = baker.make('document_library.DocumentCategory', is_published=True)
+        self.en_doc = baker.make('document_library.Document')
+        self.en_doc.set_current_language('en')
+        self.en_doc.category = en_cat
+        self.en_doc.is_published = True
+        self.en_doc.title = 'EN'
+        self.en_doc.save()
 
         nonpub_cat = baker.make(
             'document_library.DocumentCategory',
             is_published=False
         )
-        self.de_doc_no_public_cat = baker.make(
-            'document_library.DocumentTranslation')
-        new_doc = self.de_doc_no_public_cat.master.translate('de')
-        new_doc.category = nonpub_cat
-        new_doc.is_published = False
-        new_doc.save()
+        self.de_doc_no_public_cat = baker.make('document_library.Document')
+        self.de_doc_no_public_cat.set_current_language('de')
+        self.de_doc_no_public_cat.category = nonpub_cat
+        self.de_doc_no_public_cat.is_published = False
+        self.de_doc_no_public_cat.title = 'DE without published category'
+        self.de_doc_no_public_cat.save()
 
     def test_manager(self):
         """Testing if the ``DocumentManager`` retrieves the correct objects."""
-        request = Mock(LANGUAGE_CODE='de')
-        self.assertEqual(
-            models.Document.objects.published(request).count(), 1, msg=(
-                'In German, there should be one published document.'))
-
         request = Mock(LANGUAGE_CODE='en')
         self.assertEqual(
             models.Document.objects.published(request).count(), 1, msg=(
                 'In English, there should be one published document.'))
+
+        request = Mock(LANGUAGE_CODE='de')
+        self.assertEqual(
+            models.Document.objects.published(request).count(), 1, msg=(
+                'In German, there should be one published document.'))
 
         request = Mock(LANGUAGE_CODE=None)
         self.assertEqual(
@@ -115,8 +114,7 @@ class DocumentPluginTestCase(TestCase):
     longMessage = True
 
     def test_model(self):
-        instance = models.DocumentPlugin(document=baker.make(
-            'document_library.DocumentTranslation').master)
+        doc = baker.make('document_library.Document')
+        instance = models.DocumentPlugin(document=doc)
         instance.save()
-        self.assertTrue(instance.pk, msg=(
-            'Should be able to instantiate and save the object.'))
+        self.assertTrue(instance.pk, msg=('Should be able to instantiate and save the object.'))

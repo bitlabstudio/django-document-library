@@ -99,7 +99,7 @@ EXTERNAL_APPS = [
     'menus',
     'filer',
     'easy_thumbnails',
-    'hvad',
+    'parler',
     'treebeard',
 ]
 

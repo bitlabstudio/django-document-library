@@ -14,13 +14,11 @@ class GetFilesForDocumentTestCase(TestCase):
     def setUp(self):
         self.user = baker.make('auth.User')
         self.doc = baker.make('document_library.Document')
-        self.doc_en = self.doc.translate('en')
-        self.doc_en.save()
-        self.doc_de = self.doc.translate('de')
-        self.doc_de.save()
+        self.doc.set_current_language('en')
+        self.doc.set_current_language('de')
 
     def test_tag(self):
-        result = document_library_tags.get_files_for_document(self.doc_en)
+        result = document_library_tags.get_files_for_document(self.doc)
         self.assertEqual(len(result), 0, msg=(
             'Shouldn\'t return any files.'))
 
@@ -32,18 +30,19 @@ class GetFrontpageDocumentsTestCase(TestCase):
     def setUp(self):
         super(GetFrontpageDocumentsTestCase, self).setUp()
         # Two documents that should be on the front page
-        self.en_doc = baker.make(
-            'document_library.DocumentTranslation',
-            language_code='en', is_published=True)
-        self.en_doc.master.is_on_front_page = True
-        self.en_doc.master.is_published = True
-        self.en_doc.master.save()
-        self.de_doc = self.en_doc.master.translate('de')
-        self.de_doc.is_published = True
-        self.de_doc.save()
+        self.doc = baker.make(
+            'document_library.Document',
+            is_published=True,
+        )
+        self.doc.is_on_front_page = True
+        self.doc.is_published = True
+        self.doc.save()
+        self.doc.set_current_language('de')
+        self.doc.is_published = True
+        self.doc.save()
 
         # And one that should not be on the front page
-        baker.make('document_library.DocumentTranslation')
+        baker.make('document_library.Document')
 
     def test_tag(self):
         req = RequestFactory().get('/')
@@ -52,7 +51,7 @@ class GetFrontpageDocumentsTestCase(TestCase):
         result = document_library_tags.get_frontpage_documents(context)
         self.assertEqual(result.count(), 1, msg=(
             'It should only return one document.'))
-        self.assertEqual(result[0], self.en_doc.master, msg=(
+        self.assertEqual(result[0], self.doc, msg=(
             'Should return the one english document that has'
             ' is_on_fron_page=True'))
 
@@ -61,7 +60,7 @@ class GetFrontpageDocumentsTestCase(TestCase):
         result = document_library_tags.get_frontpage_documents(context)
         self.assertEqual(result.count(), 1, msg=(
             'It should only return one document.'))
-        self.assertEqual(result[0], self.de_doc, msg=(
+        self.assertEqual(result[0], self.doc, msg=(
             'Should return the one german document that has'
             ' is_on_fron_page=True'))
 
@@ -71,14 +70,10 @@ class GetLatestDocumentsTestCase(TestCase):
     longMessage = True
 
     def test_tag(self):
-        baker.make('document_library.DocumentTranslation', language_code='en',
-                   is_published=True)
-        baker.make('document_library.DocumentTranslation', language_code='en',
-                   is_published=True)
-        baker.make('document_library.DocumentTranslation', language_code='en',
-                   is_published=True)
-        baker.make('document_library.DocumentTranslation', language_code='en',
-                   is_published=False)
+        baker.make('document_library.Document', is_published=True)
+        baker.make('document_library.Document', is_published=True)
+        baker.make('document_library.Document', is_published=True)
+        baker.make('document_library.Document', is_published=False)
 
         req = RequestFactory().get('/')
         req.LANGUAGE_CODE = 'en'
