@@ -8,7 +8,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import get_language, ugettext_lazy as _
 from filer.fields.file import FilerFileField
 from filer.fields.folder import FilerFolderField
@@ -17,7 +16,6 @@ from parler.managers import TranslationManager
 from parler.models import TranslatableModel, TranslatedFields
 
 
-@python_2_unicode_compatible
 class Attachment(models.Model):
     """
     Mapping class to map any object to ``Document`` objects.
@@ -48,7 +46,6 @@ class Attachment(models.Model):
         return self.document.get_title()
 
 
-@python_2_unicode_compatible
 class DocumentCategory(TranslatableModel):
     """
     Documents can be grouped in categories.
@@ -119,7 +116,6 @@ class DocumentPlugin(CMSPlugin):
     )
 
 
-@python_2_unicode_compatible
 class Document(TranslatableModel):
     """
     A document consists of a title and description and a number of filer-files.
