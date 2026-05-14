@@ -1,4 +1,5 @@
 """Models for the ``document_library`` app."""
+
 from __future__ import unicode_literals
 
 from cms.models.fields import PlaceholderField
@@ -8,7 +9,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.urls import reverse
-from django.utils.translation import get_language, ugettext_lazy as _
+from django.utils.translation import get_language, gettext_lazy as _
 from filer.fields.file import FilerFileField
 from filer.fields.folder import FilerFolderField
 from filer.fields.image import FilerImageField
@@ -24,23 +25,27 @@ class Attachment(models.Model):
     your objects.
 
     """
+
     document = models.ForeignKey(
-        'document_library.Document',
-        verbose_name=_('Document'),
+        "document_library.Document",
+        verbose_name=_("Document"),
         on_delete=models.CASCADE,
     )
 
     position = models.PositiveIntegerField(
-        verbose_name=_('Position'),
-        null=True, blank=True,
+        verbose_name=_("Position"),
+        null=True,
+        blank=True,
     )
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey("content_type", "object_id")
 
     class Meta:
-        ordering = ['position', ]
+        ordering = [
+            "position",
+        ]
 
     def __str__(self):
         return self.document.get_title()
@@ -58,25 +63,26 @@ class DocumentCategory(TranslatableModel):
     :title: The title of this category.
 
     """
+
     creation_date = models.DateTimeField(
         auto_now_add=True,
-        verbose_name=_('Creation date'),
+        verbose_name=_("Creation date"),
     )
 
     slug = models.SlugField(
         max_length=32,
-        verbose_name=_('Slug'),
+        verbose_name=_("Slug"),
     )
 
     is_published = models.BooleanField(
-        verbose_name=_('Is published'),
+        verbose_name=_("Is published"),
         default=False,
     )
 
     translations = TranslatedFields(
         title=models.CharField(
             max_length=256,
-            verbose_name=_('Title'),
+            verbose_name=_("Title"),
         )
     )
 
@@ -84,7 +90,7 @@ class DocumentCategory(TranslatableModel):
         return self.get_title()
 
     def get_title(self):
-        return self.safe_translation_getter('title', self.slug)
+        return self.safe_translation_getter("title", self.slug)
 
 
 class DocumentManager(TranslationManager):
@@ -97,21 +103,27 @@ class DocumentManager(TranslationManager):
         :param request: A Request instance.
 
         """
-        language = getattr(request, 'LANGUAGE_CODE', get_language())
+        language = getattr(request, "LANGUAGE_CODE", get_language())
         if not language:
             return self.model.objects.none()
 
         qs = self.get_queryset()
-        qs = qs.language(language).translated(is_published=True).filter(
-            models.Q(category__isnull=True) | models.Q(category__is_published=True))
+        qs = (
+            qs.language(language)
+            .translated(is_published=True)
+            .filter(
+                models.Q(category__isnull=True) | models.Q(category__is_published=True)
+            )
+        )
         return qs
 
 
 class DocumentPlugin(CMSPlugin):
     """Class to extend the `CMSPlugin` pluginmodel."""
+
     document = models.ForeignKey(
-        'document_library.Document',
-        verbose_name=_('Document'),
+        "document_library.Document",
+        verbose_name=_("Document"),
         on_delete=models.CASCADE,
     )
 
@@ -141,112 +153,120 @@ class Document(TranslatableModel):
     :meta_description: The meta description to display for the detail page.
 
     """
+
     category = models.ForeignKey(
         DocumentCategory,
-        verbose_name=_('Category'),
-        null=True, blank=True,
+        verbose_name=_("Category"),
+        null=True,
+        blank=True,
         on_delete=models.SET_NULL,
     )
 
     creation_date = models.DateTimeField(
         auto_now_add=True,
-        verbose_name=_('Creation date'),
+        verbose_name=_("Creation date"),
     )
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        verbose_name=_('User'),
-        null=True, blank=True,
+        verbose_name=_("User"),
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
     )
 
     position = models.PositiveIntegerField(
-        verbose_name=_('Position'),
-        null=True, blank=True,
+        verbose_name=_("Position"),
+        null=True,
+        blank=True,
     )
 
     is_on_front_page = models.BooleanField(
         default=False,
-        verbose_name=('Is on front page'),
+        verbose_name=("Is on front page"),
     )
 
     source_url = models.URLField(
-        verbose_name=_('Source URL'),
-        help_text=_(
-            'Use this if you want to give credit for a downloadable file.'),
+        verbose_name=_("Source URL"),
+        help_text=_("Use this if you want to give credit for a downloadable file."),
         blank=True,
     )
 
     download_url = models.URLField(
-        verbose_name=_('Download URL'),
+        verbose_name=_("Download URL"),
         help_text=_(
-            'Use this if you want to link to a file instead of self-hosting'
-            ' it'),
+            "Use this if you want to link to a file instead of self-hosting it"
+        ),
         blank=True,
     )
 
     content = PlaceholderField(
-        'document_library_content',
-        related_name='documents',
+        "document_library_content",
+        related_name="documents",
     )
 
     update_date = models.DateTimeField(
         auto_now=True,
-        verbose_name=_('Update date'),
+        verbose_name=_("Update date"),
     )
 
     document_date = models.DateTimeField(
-        verbose_name=_('Document date'),
-        blank=True, null=True,
+        verbose_name=_("Document date"),
+        blank=True,
+        null=True,
     )
 
     image = FilerImageField(
-        verbose_name=_('Image'),
-        related_name='document_images',
-        null=True, blank=True,
+        verbose_name=_("Image"),
+        related_name="document_images",
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
     )
 
     folder = FilerFolderField(
-        verbose_name=_('Folder'),
-        related_name='document_folders',
-        null=True, blank=True,
+        verbose_name=_("Folder"),
+        related_name="document_folders",
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
     )
 
     translations = TranslatedFields(
         title=models.CharField(
             max_length=512,
-            verbose_name=_('Title'),
+            verbose_name=_("Title"),
         ),
         description=models.TextField(
-            verbose_name=_('Short description'),
+            verbose_name=_("Short description"),
             blank=True,
         ),
         filer_file=FilerFileField(
-            verbose_name=_('File'),
-            related_name='document_files',
-            null=True, blank=True,
+            verbose_name=_("File"),
+            related_name="document_files",
+            null=True,
+            blank=True,
             on_delete=models.CASCADE,
         ),
         thumbnail=FilerFileField(
-            verbose_name=_('Thumbnail'),
-            related_name='document_thumbnails',
-            null=True, blank=True,
+            verbose_name=_("Thumbnail"),
+            related_name="document_thumbnails",
+            null=True,
+            blank=True,
             on_delete=models.CASCADE,
         ),
         copyright_notice=models.CharField(
             max_length=1024,
-            verbose_name=_('Copyright notice'),
+            verbose_name=_("Copyright notice"),
             blank=True,
         ),
         is_published=models.BooleanField(
-            verbose_name=_('Is published'),
+            verbose_name=_("Is published"),
             default=False,
         ),
         meta_description=models.TextField(
             max_length=512,
-            verbose_name=_('Meta description'),
+            verbose_name=_("Meta description"),
             blank=True,
         ),
     )
@@ -254,20 +274,27 @@ class Document(TranslatableModel):
     objects = DocumentManager()
 
     class Meta:
-        ordering = ('position', '-document_date',)
+        ordering = (
+            "position",
+            "-document_date",
+        )
 
     def __str__(self):
         return self.get_title()
 
     def get_absolute_url(self):
-        return reverse('document_library_detail', kwargs={
-            'pk': self.pk, })
+        return reverse(
+            "document_library_detail",
+            kwargs={
+                "pk": self.pk,
+            },
+        )
 
     def get_filetype(self):
         try:
             return self.filer_file.extension.upper()
         except AttributeError:
-            return ''
+            return ""
 
     def get_title(self):
         # Kept for backwards compatibility
